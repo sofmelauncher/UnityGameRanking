@@ -28,11 +28,12 @@ namespace CsharpRanking
     ///外部サーバーへのランキング機能を提供
     ///接続失敗時ローカルのデータベースを利用する
     ///</summary>
-    class WWWRunking
+    public class WWWRunking:IServer
     {
         //= "http://localhost/runking/GetData.php";
 
         public string BaseUrl { private set; get; }
+
         public string PostString { get; set; }
         public string ResData { private set; get; }
 
@@ -89,6 +90,11 @@ namespace CsharpRanking
 
             Console.WriteLine("data：");
             Console.WriteLine(ResData);
+        }
+
+        public void SaveData()
+        {
+
         }
         ///<summary>
         ///ローカルにあるサーバーアドレス情報読み込み
