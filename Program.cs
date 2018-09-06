@@ -13,7 +13,7 @@ namespace CsharpRanking
         static void Main(string[] args)
         {
             var w = new RankingManager();
-            w.PostString = "aaai";
+            w.PostString = "aaai333";
             if (w.Init(1, ScoreType.Number, OrderType.ASC))
             {
                 w.GetData();
