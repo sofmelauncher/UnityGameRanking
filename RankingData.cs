@@ -28,6 +28,7 @@ namespace CsharpRanking
         {
             this.ScoreValue = data;
             this.DataName = name;
+            this.SaveTime = DateTime.Now;
         }
 
         public static bool SetGameID(UInt64 id)
@@ -56,7 +57,8 @@ namespace CsharpRanking
                     { "GameID", RankingData.GameID.ToString() },
                     { "DataID", "0" },
                     { "DataName", this.DataName },
-                    { "Score", this.ScoreValue }
+                    { "Score", this.ScoreValue },
+                    { "Time", this.SaveTime.ToString("yyyy-MM-ddTHH:mm:ss") }
                 };
         }
 
