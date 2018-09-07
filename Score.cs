@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace CsharpRanking
 {
-    class Score
-    {
-        
+    public class Score
+    { 
         public static ScoreType Type { private set; get; }
 
         public string ScoreValue { private set; get; }
@@ -30,5 +29,12 @@ namespace CsharpRanking
             TimeSpan ts = new TimeSpan(t);
             return ts;
         }
+
+        public void Save(string data)
+        {
+            this.ScoreValue = data;
+        }
+
+
     }
 }
