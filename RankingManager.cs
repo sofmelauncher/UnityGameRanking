@@ -20,11 +20,7 @@ namespace CsharpRanking
         public static bool CanOnline { private set; get; }
 
         public string BaseUrl { private set; get; }
-        public string PostString { get; set; }
-        public string ResData { private set; get; }
 
-        private string PostData { get; set; }
-        private Encoding enc = Encoding.GetEncoding("UTF-8");
         private string ConfigFilePath = ConfigPath.LocalUserAppDataPath + "/config.txt";
 
         private const string GET_DATA_URL = "/runking/GetData.php";
