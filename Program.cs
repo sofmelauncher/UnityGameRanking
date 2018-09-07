@@ -12,15 +12,15 @@ namespace CsharpRanking
     {
         static void Main(string[] args)
         {
-            var w = new RankingManager();
+            var w = new RankingManager(1, ScoreType.Number, OrderType.ASC);
             w.PostString = "aaai333";
-            if (w.Init(1, ScoreType.Number, OrderType.ASC))
+            if (w.Init())
             {
-                w.GetData();
+                w.DataSetAndLoad(1, "aa");
             }
             else
             {
-                Console.WriteLine("filed init.");
+                Console.WriteLine("Filed to init.");
             }
         }    
     }
