@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Net.Http;
 
 namespace CsharpRanking
 {
@@ -10,7 +12,7 @@ namespace CsharpRanking
     ///外部サーバーへのランキング機能を提供
     ///接続失敗時ローカルのデータベースを利用する
     ///</summary>
-    public class RankingManager : IServer
+    public class RankingManager
     {
         //= "http://localhost/runking/GetData.php";
 
@@ -28,64 +30,74 @@ namespace CsharpRanking
         private const string GET_DATA_URL = "/runking/GetData.php";
 
 
-        public RankingManager()
+        public RankingManager(UInt64 gameid, ScoreType scoreType, OrderType orderType)
         {
-
+            if (!RankingData.SetGameID(gameid)) throw new System.ArgumentOutOfRangeException("Game ID is out of range", "gameid");
+            RankingData.SetScoreType(scoreType);
+            RankingManager.Oder = orderType;
         }
 
         ///<summary>
         ///外部データベースに接続, 初期設定
         ///</summary>
         ///<returns>true:接続成功, false:接続失敗</returns>
-        public bool Init(UInt64 gameid, ScoreType scoreType, OrderType orderType)
+        public bool Init()
         {
-            if (this.LoadServerAdress() && RankingData.SetGameID(gameid))
+            if (this.LoadServerAdress())
             {
-                Console.WriteLine("Conection to server.");
-                Score.SetScoreType(scoreType);
-                RankingManager.Oder = orderType;
+#if DEBUG
+                Console.WriteLine("Success for address read");
+#endif
                 RankingManager.CanOnline = true;
                 return true;
             }
             else
             {
+#if DEBUG
+                Console.WriteLine("Failed to address read");
+#endif
                 RankingManager.CanOnline = false;
                 return false;
             }
 
         }
         ///<summary>
+        ///新規データをセットして最新ランキングを取得
+        ///</summary>
+        public void DataSetAndLoad<Type>(Type data, string dataName = "")
+            where Type : struct
+        {
+            RankingData newdata = new RankingData(data.ToString(), dataName);
+            NameValueCollection nvc = new NameValueCollection();
+            //Console.WriteLine(this.SaveAndGetData(newdata));
+            var task = Task.Run(() => {
+                return this.SaveAndGetData(newdata);
+            });
+#if DEBUG
+            System.Console.WriteLine(task.Result);
+#endif
+            return;
+        }
+        
+        ///<summary>
         ///外部データベースからデータ取得
         ///</summary>
         public void GetData()
         {
-            this.PostData = "id=1&word=" + System.Web.HttpUtility.UrlEncode(PostString, enc);
 
-            System.Net.WebClient wc = new System.Net.WebClient();
-            wc.Encoding = enc;
-
-            wc.Headers.Add("Content-Type", "application/plain");
-            try
-            {
-                ResData = wc.UploadString(BaseUrl + GET_DATA_URL, PostData);
-            }
-            catch (System.Net.WebException ex)
-            {
-                Console.WriteLine("Connection to server failed.");
-                Console.WriteLine(ex.Message);
-            }
-
-            Console.WriteLine(PostData);
-            wc.Dispose();
-
-            Console.WriteLine("data：");
-            Console.WriteLine(ResData);
         }
 
-        public void SaveData()
+        private async Task<string> SaveAndGetData(RankingData data)
         {
-
+            var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
+            var client = new System.Net.Http.HttpClient();
+#if DEBUG
+            Console.WriteLine(content);
+#endif
+            var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
+            return await response.Content.ReadAsStringAsync();
         }
+
         ///<summary>
         ///ローカルにあるサーバーアドレス情報読み込み
         ///</summary>
