@@ -12,15 +12,23 @@ namespace CsharpRanking
     {
         static void Main(string[] args)
         {
-            var w = new RankingManager(1, ScoreType.Number, OrderType.ASC);
-            if (w.Init())
-            {
-                w.DataSetAndLoad(1.3, "aa");
-            }
-            else
-            {
-                Console.WriteLine("Filed to init.");
-            }
-        }    
+            //var w = new RankingManager(1, ScoreType.Number, OrderType.ASC);
+            //if (w.Init())
+            //{
+            //    w.DataSetAndLoad(1.3, "aa");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Filed to init.");
+            //}
+
+            SQLiteTest.Program s = new SQLiteTest.Program();
+            s.ConnectionOpen();
+            s.CreateTable();
+            s.InsertRecord();
+            s.SelectRecord();
+            s.ConnectionClose();
+
+        }
     }
 }
