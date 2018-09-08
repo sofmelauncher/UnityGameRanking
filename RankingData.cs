@@ -16,13 +16,14 @@ namespace CsharpRanking
         public string DataName { private set; get; }
         //private Score Score { set; get; }
 
+        public static ScoreType Type { private set; get; }
+        public string ScoreValue { private set; get; }
+
         public static void SetScoreType(ScoreType type)
         {
             Type = type;
             return;
         }
-        public static ScoreType Type { private set; get; }
-        public string ScoreValue { private set; get; }
 
         public RankingData(string data, string name = "")
         {
@@ -38,16 +39,20 @@ namespace CsharpRanking
             return true;
         }
 
-        public double ToDouble()
+        public double ToDouble
         {
-            return double.Parse(this.ScoreValue);
+            get{
+                return double.Parse(this.ScoreValue);
+            }
         }
 
-        public TimeSpan ToTime()
+        public TimeSpan ToTime
         {
-            long t = long.Parse(ScoreValue);
-            TimeSpan ts = new TimeSpan(t);
-            return ts;
+            get {
+                long t = long.Parse(ScoreValue);
+                TimeSpan ts = new TimeSpan(t);
+                return ts;
+            }
         }
 
         public Dictionary<string, string> Dictionary()
