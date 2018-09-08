@@ -25,12 +25,14 @@ namespace CsharpRanking
 
         private const string GET_DATA_URL = "/runking/GetData.php";
 
+        SQLite.SQLite s = new SQLite.SQLite();
 
-        public RankingManager(UInt64 gameid, ScoreType scoreType, OrderType orderType)
+        public RankingManager(string gamename, UInt64 gameid, ScoreType scoreType, OrderType orderType)
         {
             if (!RankingData.SetGameID(gameid)) throw new System.ArgumentOutOfRangeException("Game ID is out of range", "gameid");
             RankingData.SetScoreType(scoreType);
             RankingManager.Oder = orderType;
+            SQLite.SQLite.SetGameName(gamename);
         }
 
         ///<summary>
@@ -39,6 +41,9 @@ namespace CsharpRanking
         ///<returns>true:接続成功, false:接続失敗</returns>
         public bool Init()
         {
+            s.ConnectionOpen();
+            s.CreateTable();
+            s.ConnectionClose();
             if (this.LoadServerAdress())
             {
 #if DEBUG
@@ -64,15 +69,22 @@ namespace CsharpRanking
             where Type : struct
         {
             RankingData newdata = new RankingData(data.ToString(), dataName);
-            NameValueCollection nvc = new NameValueCollection();
-            //Console.WriteLine(this.SaveAndGetData(newdata));
-            var task = Task.Run(() => {
-                return this.SaveAndGetData(newdata);
-            });
+
+            s.ConnectionOpen();
+            s.InsertRecord(newdata);
+            s.ConnectionClose();
+            
+            if (CanOnline) {
+                NameValueCollection nvc = new NameValueCollection();
+                //Console.WriteLine(this.SaveAndGetData(newdata));
+                var task = Task.Run(() => {
+                    return this.SaveAndGetData(newdata);
+                });
 #if DEBUG
-            System.Console.WriteLine(task.Result);
+                System.Console.WriteLine(task.Result);
 #endif
-            return;
+            }
+                return;
         }
         
         ///<summary>
@@ -80,7 +92,9 @@ namespace CsharpRanking
         ///</summary>
         public void GetData()
         {
-
+            s.ConnectionOpen();
+            s.SelectRecord();
+            s.ConnectionClose();
         }
 
         private async Task<string> SaveAndGetData(RankingData data)
