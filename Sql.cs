@@ -28,6 +28,7 @@ namespace SQLite
             _conn.ConnectionString = 
                 "Data Source=" + DbFilePath + "\\" + GameName + FileNmae + ";Version=3;";
             _conn.Open();
+            return;
         }
 
 
@@ -39,6 +40,7 @@ namespace SQLite
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = CreateTableCommand;
             command.ExecuteNonQuery();
+            return;
         }
 
         /// <summary>
@@ -66,6 +68,7 @@ namespace SQLite
             command.Parameters.Add(DataName);
             command.Parameters.Add(ScoreValue);
             command.ExecuteNonQuery();
+            return;
         }
 
         /// <summary>
@@ -73,19 +76,21 @@ namespace SQLite
         /// </summary>
         public void SelectRecord()
         {
+            SQLiteCommand command = _conn.CreateCommand();
+            command.CommandText = SelectCommand;
+            var reader = command.ExecuteReader();
+            this.ConsoleWriteData(reader);
+            return;
+        }
+
+        public void AllSelectRecord()
+        {
             // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = AllSelectCommand;
             var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
-                    reader.GetInt32(0),
-                    reader.GetString(1),
-                    reader.GetString(2),
-                    reader.GetDouble(3)
-                ));
-            }
+            this.ConsoleWriteData(reader);
+            return;
         }
 
 
@@ -95,6 +100,7 @@ namespace SQLite
         public void ConnectionClose()
         {
             _conn.Close();
+            return;
         }
 
         /// <summary>
@@ -103,6 +109,19 @@ namespace SQLite
         public static void SetGameName(string name)
         {
             SQLite.GameName = name;
+        }
+
+        private void ConsoleWriteData(SQLiteDataReader data)
+        {
+            while (data.Read())
+            {
+                Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
+                    data.GetInt32(0),
+                    data.GetString(1),
+                    data.GetString(2),
+                    data.GetDouble(3)
+                ));
+            }
         }
     }
 }
