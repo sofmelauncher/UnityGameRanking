@@ -22,10 +22,10 @@ namespace CsharpRanking
             //    Console.WriteLine("Filed to init.");
             //}
 
-            SQLiteTest.Program s = new SQLiteTest.Program();
+            SQLite.SQLite s = new SQLite.SQLite();
             s.ConnectionOpen();
             s.CreateTable();
-            s.InsertRecord();
+            //s.InsertRecord();
             s.SelectRecord();
             s.ConnectionClose();
 

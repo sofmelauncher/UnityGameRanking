@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Data.SQLite;
 
-namespace SQLiteTest
+namespace SQLite
 {
-    class Program
+    class SQLite
     {
-        static SQLiteConnection _conn = null;
-        static void SQLMain(string[] args)
-        {
-            //ConnectionOpen();
+        
+        private static SQLiteConnection _conn = null;
+        private string DbFile = ConfigPath.LocalUserAppDataPath + "\\ranking.db";
 
-            //CreateTable();
-
-            //InsertRecord();
-
-            //SelectRecord();
-
-            //ConnectionClose();
-        }
+        private const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Ranking("
+            + "DataID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+            + "SaveTime DATETIME NOT NULL,"
+            + "DataName VARCHAR(100) NULL,"
+            + "ScoreValue CHAR NOT NULL)";
+        private const string InsertCommand = "INSERT INTO Ranking (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
+        private const string SelectCommand = "SELECT* FROM Ranking";
 
         /// <summary>
         /// データベースに接続
@@ -25,7 +23,7 @@ namespace SQLiteTest
         public void ConnectionOpen()
         {
             _conn = new SQLiteConnection();
-            _conn.ConnectionString = "Data Source=testdb.db";
+            _conn.ConnectionString = "Data Source=" + DbFile + ";Version=3;";
             _conn.Open();
         }
 
@@ -36,7 +34,7 @@ namespace SQLiteTest
         public void CreateTable()
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = "CREATE TABLE Test (id integer primary key AUTOINCREMENT, text varchar(100))";
+            command.CommandText = CreateTableCommand;
             command.ExecuteNonQuery();
         }
 
@@ -48,11 +46,19 @@ namespace SQLiteTest
             for (int i = 0; i < 10; i++)
             {
                 SQLiteCommand command = _conn.CreateCommand();
-                command.CommandText = "INSERT INTO Test (text) VALUES (@1)";
-                SQLiteParameter parameter = command.CreateParameter();
-                parameter.ParameterName = "@1";
-                parameter.Value = "this is " + i.ToString() + " text";
-                command.Parameters.Add(parameter);
+                command.CommandText = InsertCommand;
+                SQLiteParameter parameter1 = command.CreateParameter();
+                parameter1.ParameterName = "@1";
+                parameter1.Value = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                SQLiteParameter parameter2 = command.CreateParameter();
+                parameter2.ParameterName = "@2";
+                parameter2.Value = i.ToString() + "er";
+                SQLiteParameter parameter3 = command.CreateParameter();
+                parameter3.ParameterName = "@3";
+                parameter3.Value = (i + 1).ToString();
+                command.Parameters.Add(parameter1);
+                command.Parameters.Add(parameter2);
+                command.Parameters.Add(parameter3);
                 command.ExecuteNonQuery();
             }
         }
@@ -64,13 +70,15 @@ namespace SQLiteTest
         {
             // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = "SELECT * FROM Test";
+            command.CommandText = SelectCommand;
             var reader = command.ExecuteReader();
             while (reader.Read())
             {
-                Console.WriteLine(string.Format("ID = {0}, Name = {1}",
+                Console.WriteLine(string.Format("ID = {0,4}, TIME = {1}, Name = {2,10}, Score = {3,5:#.###}",
                     reader.GetInt32(0),
-                    reader.GetString(1)
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetString(3)
                 ));
             }
         }
