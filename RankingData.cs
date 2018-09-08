@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CsharpRanking
 {
+    /// <summary>
+    /// ランキングデータクラス
+    /// </summary>
     public class RankingData
     {
         public static UInt64 GameID { private set; get; }
@@ -14,7 +17,6 @@ namespace CsharpRanking
         public DateTime SaveTime { private set; get; }
 
         public string DataName { private set; get; }
-        //private Score Score { set; get; }
 
         public static ScoreType Type { private set; get; }
         public string ScoreValue { private set; get; }
@@ -24,7 +26,11 @@ namespace CsharpRanking
             Type = type;
             return;
         }
-
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="data">スコアデータ</param>
+        /// <param name="name">データ名</param>
         public RankingData(string data, string name = "")
         {
             this.ScoreValue = data;
@@ -32,6 +38,11 @@ namespace CsharpRanking
             this.SaveTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// statc, ゲームIDセット
+        /// </summary>
+        /// <param name="id">ゲームID</param>
+        /// <returns>true:成功, false:失敗</returns>
         public static bool SetGameID(UInt64 id)
         {
             if (id >= 100) return false;
@@ -39,6 +50,9 @@ namespace CsharpRanking
             return true;
         }
 
+        /// <summary>
+        /// スコアデータをdouble型で取得
+        /// </summary>
         public double ToDouble
         {
             get{
@@ -46,6 +60,9 @@ namespace CsharpRanking
             }
         }
 
+        /// <summary>
+        /// スコアデータをTimeSpan型で取得
+        /// </summary>
         public TimeSpan ToTime
         {
             get {
@@ -55,6 +72,10 @@ namespace CsharpRanking
             }
         }
 
+        /// <summary>
+        /// POST用のランキングデータを辞書化して取得する
+        /// </summary>
+        /// <returns>連想配列型(辞書)のスコアデータ</returns>
         public Dictionary<string, string> Dictionary()
         {
             return new Dictionary<string, string>

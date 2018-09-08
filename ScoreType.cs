@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CsharpRanking
 {
-    ///<summary>
-    ///スコアのデータ型
-    ///</summary>
+    /// <summary>
+    /// スコアのデータ型
+    /// </summary>
     public enum ScoreType
     {
         Time,

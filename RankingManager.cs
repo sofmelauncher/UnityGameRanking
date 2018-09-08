@@ -8,10 +8,11 @@ using System.Net.Http;
 
 namespace CsharpRanking
 {
-    ///<summary>
-    ///外部サーバーへのランキング機能を提供
-    ///接続失敗時ローカルのデータベースを利用する
-    ///</summary>
+    /// <summary>
+    /// ランキングデータを管理するクラス
+    /// 外部サーバーへのランキング機能を提供
+    /// 接続失敗時ローカルのデータベースを利用する
+    /// </summary>
     public class RankingManager
     {
         //= "http://localhost/runking/GetData.php";
@@ -35,10 +36,10 @@ namespace CsharpRanking
             SQLite.SQLite.SetGameName(gamename);
         }
 
-        ///<summary>
-        ///外部データベースに接続, 初期設定
-        ///</summary>
-        ///<returns>true:接続成功, false:接続失敗</returns>
+        /// <summary>
+        /// 外部データベースに接続, 初期設定
+        /// </summary>
+        /// <returns>true:接続成功, false:接続失敗</returns>
         public bool Init()
         {
             s.ConnectionOpen();
@@ -62,9 +63,9 @@ namespace CsharpRanking
             }
 
         }
-        ///<summary>
-        ///新規データをセットして最新ランキングを取得
-        ///</summary>
+        /// <summary>
+        /// 新規データをセットして最新ランキングを取得
+        /// </summary>
         public void DataSetAndLoad<Type>(Type data, string dataName = "")
             where Type : struct
         {
@@ -87,9 +88,9 @@ namespace CsharpRanking
                 return;
         }
         
-        ///<summary>
-        ///外部データベースからデータ取得
-        ///</summary>
+        /// <summary>
+        /// 外部データベースからデータ取得
+        /// </summary>
         public void GetData()
         {
             s.ConnectionOpen();
@@ -108,10 +109,10 @@ namespace CsharpRanking
             return await response.Content.ReadAsStringAsync();
         }
 
-        ///<summary>
-        ///ローカルにあるサーバーアドレス情報読み込み
-        ///</summary>
-        ///<returns>true:読み込み成功, false:読み込み失敗</returns>
+        /// <summary>
+        /// ローカルにあるサーバーアドレス情報読み込み
+        /// </summary>
+        /// <returns>true:読み込み成功, false:読み込み失敗</returns>
         private bool LoadServerAdress()
         {
             System.IO.StreamReader sr;

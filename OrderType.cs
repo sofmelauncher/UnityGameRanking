@@ -1,17 +1,17 @@
 ﻿namespace CsharpRanking
 {
-    ///<summary>
-    ///昇順 or 降順
-    ///</summary>
+    /// <summary>
+    /// 昇順 or 降順
+    /// </summary>
     public enum OrderType
     {
-        ///<summary>
-        ///ASC(昇順)
-        ///</summary>
+        /// <summary>
+        /// ASC(昇順)
+        /// </summary>
         ASC,
-        ///<summary>
-        ///DESC(降順)
-        ///</summary>
+        /// <summary>
+        /// DESC(降順)
+        /// </summary>
         DESC
     }
 }

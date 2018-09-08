@@ -96,6 +96,7 @@ namespace SQLite
         {
             _conn.Close();
         }
+
         /// <summary>
         /// ゲーム名設定
         /// </summary>
