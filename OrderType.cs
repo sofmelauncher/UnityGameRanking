@@ -10,8 +10,8 @@
         ///</summary>
         ASC,
         ///<summary>
-        ///DEC(降順)
+        ///DESC(降順)
         ///</summary>
-        DEC
+        DESC
     }
 }
