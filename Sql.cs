@@ -5,17 +5,19 @@ namespace SQLite
 {
     class SQLite
     {
-        
+        public static string GameName { private set; get; }
         private static SQLiteConnection _conn = null;
-        private string DbFile = ConfigPath.LocalUserAppDataPath + "\\ranking.db";
+        private string DbFilePath = ConfigPath.LocalUserAppDataPath;
+        private const string FileNmae = "-ranking.db";
 
         private const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Ranking("
             + "DataID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
             + "SaveTime DATETIME NOT NULL,"
             + "DataName VARCHAR(100) NULL,"
-            + "ScoreValue CHAR NOT NULL)";
+            + "ScoreValue DOUBLE NOT NULL)";
         private const string InsertCommand = "INSERT INTO Ranking (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
-        private const string SelectCommand = "SELECT* FROM Ranking";
+        private const string SelectCommand = "SELECT * FROM Ranking ORDER BY SaveTime DESC;";
+        private const string AllSelectCommand = "SELECT * FROM Ranking;";
 
         /// <summary>
         /// データベースに接続
@@ -23,7 +25,8 @@ namespace SQLite
         public void ConnectionOpen()
         {
             _conn = new SQLiteConnection();
-            _conn.ConnectionString = "Data Source=" + DbFile + ";Version=3;";
+            _conn.ConnectionString = 
+                "Data Source=" + DbFilePath + "\\" + GameName + FileNmae + ";Version=3;";
             _conn.Open();
         }
 
@@ -41,26 +44,28 @@ namespace SQLite
         /// <summary>
         /// レコードを挿入
         /// </summary>
-        public void InsertRecord()
+        public void InsertRecord(CsharpRanking.RankingData data)
         {
-            for (int i = 0; i < 10; i++)
-            {
-                SQLiteCommand command = _conn.CreateCommand();
-                command.CommandText = InsertCommand;
-                SQLiteParameter parameter1 = command.CreateParameter();
-                parameter1.ParameterName = "@1";
-                parameter1.Value = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-                SQLiteParameter parameter2 = command.CreateParameter();
-                parameter2.ParameterName = "@2";
-                parameter2.Value = i.ToString() + "er";
-                SQLiteParameter parameter3 = command.CreateParameter();
-                parameter3.ParameterName = "@3";
-                parameter3.Value = (i + 1).ToString();
-                command.Parameters.Add(parameter1);
-                command.Parameters.Add(parameter2);
-                command.Parameters.Add(parameter3);
-                command.ExecuteNonQuery();
-            }
+            
+            SQLiteCommand command = _conn.CreateCommand();
+            command.CommandText = InsertCommand;
+
+            SQLiteParameter SaveTime = command.CreateParameter();
+            SaveTime.ParameterName = "@1";
+            SaveTime.Value = data.SaveTime;
+
+            SQLiteParameter DataName = command.CreateParameter();
+            DataName.ParameterName = "@2";
+            DataName.Value = data.DataName;
+
+            SQLiteParameter ScoreValue = command.CreateParameter();
+            ScoreValue.ParameterName = "@3";
+            ScoreValue.Value = data.ToDouble;
+
+            command.Parameters.Add(SaveTime);
+            command.Parameters.Add(DataName);
+            command.Parameters.Add(ScoreValue);
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -70,15 +75,15 @@ namespace SQLite
         {
             // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = SelectCommand;
+            command.CommandText = AllSelectCommand;
             var reader = command.ExecuteReader();
             while (reader.Read())
             {
-                Console.WriteLine(string.Format("ID = {0,4}, TIME = {1}, Name = {2,10}, Score = {3,5:#.###}",
+                Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
                     reader.GetInt32(0),
                     reader.GetString(1),
                     reader.GetString(2),
-                    reader.GetString(3)
+                    reader.GetDouble(3)
                 ));
             }
         }
@@ -90,6 +95,13 @@ namespace SQLite
         public void ConnectionClose()
         {
             _conn.Close();
+        }
+        /// <summary>
+        /// ゲーム名設定
+        /// </summary>
+        public static void SetGameName(string name)
+        {
+            SQLite.GameName = name;
         }
     }
 }
