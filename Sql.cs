@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SQLite;
+using System.Text.RegularExpressions;
 
 namespace SQLite
 {
@@ -8,16 +9,22 @@ namespace SQLite
         public static string GameName { private set; get; }
         private static SQLiteConnection _conn = null;
         private string DbFilePath = ConfigPath.LocalUserAppDataPath;
-        private const string FileNmae = "-ranking.db";
+        private const string FileNmae = "ranking.db";
 
-        private const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Ranking("
-            + "DataID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+        private const string CreateTableCommand = 
+            "CREATE TABLE IF NOT EXISTS @GameName (DataID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
             + "SaveTime DATETIME NOT NULL,"
             + "DataName VARCHAR(100) NULL,"
             + "ScoreValue DOUBLE NOT NULL)";
-        private const string InsertCommand = "INSERT INTO Ranking (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
-        private const string SelectCommand = "SELECT * FROM Ranking ORDER BY SaveTime DESC;";
-        private const string AllSelectCommand = "SELECT * FROM Ranking;";
+
+        private const string InsertCommand = 
+            "INSERT INTO @GameName (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
+
+        private const string SelectCommand = 
+            "SELECT * FROM @GameName ORDER BY SaveTime DESC;";
+
+        private const string AllSelectCommand = 
+            "SELECT * FROM @GameName;";
 
         /// <summary>
         /// データベースに接続
@@ -26,7 +33,7 @@ namespace SQLite
         {
             _conn = new SQLiteConnection();
             _conn.ConnectionString = 
-                "Data Source=" + DbFilePath + "\\" + GameName + FileNmae + ";Version=3;";
+                "Data Source=" + DbFilePath + "\\" + FileNmae + ";Version=3;";
             _conn.Open();
             return;
         }
@@ -38,7 +45,7 @@ namespace SQLite
         public void CreateTable()
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = CreateTableCommand;
+            command.CommandText = GameNameINCommand(CreateTableCommand, SQLite.GameName);
             command.ExecuteNonQuery();
             return;
         }
@@ -50,7 +57,7 @@ namespace SQLite
         {
             
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = InsertCommand;
+            command.CommandText = GameNameINCommand(InsertCommand, SQLite.GameName);
 
             SQLiteParameter SaveTime = command.CreateParameter();
             SaveTime.ParameterName = "@1";
@@ -77,7 +84,7 @@ namespace SQLite
         public void SelectRecord()
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = SelectCommand;
+            command.CommandText = GameNameINCommand(SelectCommand, SQLite.GameName);
             var reader = command.ExecuteReader();
             this.ConsoleWriteData(reader);
             return;
@@ -87,7 +94,7 @@ namespace SQLite
         {
             // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = AllSelectCommand;
+            command.CommandText = GameNameINCommand(AllSelectCommand, SQLite.GameName);
             var reader = command.ExecuteReader();
             this.ConsoleWriteData(reader);
             return;
@@ -122,6 +129,14 @@ namespace SQLite
                     data.GetDouble(3)
                 ));
             }
+        }
+
+        private string GameNameINCommand(string command, string name)
+        {
+            Console.WriteLine(command);
+            string result = Regex.Replace(command, "@GameName", name);
+            Console.WriteLine(result);
+            return result;
         }
     }
 }

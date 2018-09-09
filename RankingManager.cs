@@ -78,11 +78,18 @@ namespace CsharpRanking
             if (CanOnline) {
                 NameValueCollection nvc = new NameValueCollection();
                 //Console.WriteLine(this.SaveAndGetData(newdata));
-                var task = Task.Run(() => {
-                    return this.SaveAndGetData(newdata);
-                });
+                try
+                {
+                    var task = Task.Run(() =>
+                    {
+                        return this.SaveAndGetData(newdata);
+                    });
 #if DEBUG
-                System.Console.WriteLine(task.Result);
+                    System.Console.WriteLine(task.Result);
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
 #endif
             }
                 return;
