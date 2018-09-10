@@ -33,7 +33,8 @@ namespace Ranking
         }
         private static void Output(string msg, LogLevel level)
         {
-            //yyyy-MM-dd HH:mm:ss [xxxxx][] 
+            //yyyy-MM-dd HH:mm:ss [xxxxx][xxxxx.xxxxx line: xxx] - xxx
+
             StackTrace st = new StackTrace(1, true);
             string name = st.GetFrame(1).GetMethod().ReflectedType.FullName + "." + st.GetFrame(1).GetMethod().Name;
             string lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
