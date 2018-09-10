@@ -34,8 +34,21 @@ namespace SQLite
             _conn = new SQLiteConnection();
             _conn.ConnectionString = 
                 "Data Source=" + DbFilePath + "\\" + FileNmae + ";Version=3;";
-            _conn.Open();
-            CsharpRanking.Log.Info("Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
+            try
+            {
+                _conn.Open();
+            }catch(InvalidOperationException ex)
+            {
+                
+            }catch(System.Data.SqlClient.SqlException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (System.Configuration.ConfigurationException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            CsharpRanking.Log.Info("【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
             return;
         }
 
@@ -47,8 +60,25 @@ namespace SQLite
         {
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(CreateTableCommand);
-            command.ExecuteNonQuery();
-            CsharpRanking.Log.Info("Connect to [" + TableName + "] table.");
+            try
+            {
+                command.ExecuteNonQuery();
+            }catch(InvalidCastException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch(System.Data.SqlClient.SqlException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch(System.IO.IOException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }catch(InvalidOperationException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            CsharpRanking.Log.Info("【SQL】Connect to [" + TableName + "] table.");
             return;
         }
 
@@ -76,11 +106,32 @@ namespace SQLite
             command.Parameters.Add(SaveTime);
             command.Parameters.Add(DataName);
             command.Parameters.Add(ScoreValue);
-            command.ExecuteNonQuery();
-            CsharpRanking.Log.Info("Execute [" + command.CommandText + "].");
-            CsharpRanking.Log.Info("@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
-            CsharpRanking.Log.Info("@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
-            CsharpRanking.Log.Info("@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (InvalidCastException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (System.IO.IOException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+
+            CsharpRanking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
+            CsharpRanking.Log.Info("【SQL】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
+            CsharpRanking.Log.Info("【SQL】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
+            CsharpRanking.Log.Info("【SQL】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
             return;
         }
 
@@ -91,8 +142,29 @@ namespace SQLite
         {
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(SelectCommand);
-            var reader = command.ExecuteReader();
-            CsharpRanking.Log.Info("Execute [" + command.CommandText + "].");
+            SQLiteDataReader reader = null;
+            try
+            {
+                reader = command.ExecuteReader();
+            }
+            catch (InvalidCastException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (System.IO.IOException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+
+            CsharpRanking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
             this.ConsoleWriteData(reader);
             return;
         }
@@ -102,8 +174,28 @@ namespace SQLite
             // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(AllSelectCommand);
-            var reader = command.ExecuteReader();
-            CsharpRanking.Log.Info("Exexute [" + command.CommandText + "].");
+            SQLiteDataReader reader = null;
+            try
+            {
+                reader = command.ExecuteReader();
+            }
+            catch (InvalidCastException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (System.IO.IOException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
+            }
+            CsharpRanking.Log.Info("【SQL】Exexute [" + command.CommandText + "].");
             this.ConsoleWriteData(reader);
             return;
         }
@@ -115,7 +207,7 @@ namespace SQLite
         public void ConnectionClose()
         {
             _conn.Close();
-            CsharpRanking.Log.Info("Data base close.");
+            CsharpRanking.Log.Info("【SQL】Data base close.");
             return;
         }
 
@@ -129,14 +221,20 @@ namespace SQLite
 
         private void ConsoleWriteData(SQLiteDataReader data)
         {
-            while (data.Read())
+            try
             {
-                Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
-                    data.GetInt32(0),
-                    data.GetString(1),
-                    data.GetString(2),
-                    data.GetDouble(3)
-                ));
+                while (data.Read())
+                {
+                    Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
+                        data.GetInt32(0),
+                        data.GetString(1),
+                        data.GetString(2),
+                        data.GetDouble(3)
+                    ));
+                }
+            }catch(System.Data.SqlClient.SqlException ex)
+            {
+                CsharpRanking.Log.Warn(ex.Message);
             }
         }
 
@@ -147,7 +245,6 @@ namespace SQLite
         /// <returns></returns>
         private string GameIDINCommand(string command)
         {
-            Console.WriteLine(command);
             string result = Regex.Replace(command, "@GameName", TableName);
             return result;
         }
