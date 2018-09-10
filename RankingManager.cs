@@ -15,8 +15,6 @@ namespace Ranking
     /// </summary>
     public class RankingManager
     {
-        //= "http://localhost/runking/GetData.php";
-
         private static OrderType Oder { set; get; }
         private static bool CanOnline { set; get; }
         private static bool IsOnline { set; get; }
@@ -60,7 +58,7 @@ namespace Ranking
             s.ConnectionOpen();
             s.CreateTable();
             s.ConnectionClose();
-            if (this.LoadServerAdress() && RankingManager.IsOnline)
+            if (this.LoadServerAddress() && RankingManager.IsOnline)
             {
                 Log.Info("【File】Success for address read.");
                 RankingManager.CanOnline = true;
@@ -238,6 +236,7 @@ namespace Ranking
             var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
             var client = new System.Net.Http.HttpClient();
 
+            Log.Info("【Onlie】Access to server.");
             var response = await client.PostAsync(BaseUrl + SAVE_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -251,6 +250,7 @@ namespace Ranking
             var content = new System.Net.Http.FormUrlEncodedContent(postid);
             var client = new System.Net.Http.HttpClient();
 
+            Log.Info("【Onlie】Access to server.");
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -259,10 +259,11 @@ namespace Ranking
         /// ローカルにあるサーバーアドレス情報読み込み
         /// </summary>
         /// <returns>true:読み込み成功, false:読み込み失敗</returns>
-        private bool LoadServerAdress()
+        private bool LoadServerAddress()
         {
             System.IO.StreamReader sr = null;
 
+            Log.Info("【File】Access to local server address.");
             try
             {
                 sr = System.IO.File.OpenText(ConfigFilePath);
@@ -301,6 +302,12 @@ namespace Ranking
             this.BaseUrl = sr.ReadToEnd();
             sr.Close();
             return true;
+        }
+
+        public void SetLimit(UInt64 l)
+        {
+            SQLite.SQLite.SetLimit(l);
+            return;
         }
     }
 }
