@@ -42,11 +42,11 @@ namespace SQLite
                 
             }catch(System.Data.SqlClient.SqlException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (System.Configuration.ConfigurationException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             Ranking.Log.Info("【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
             return;
@@ -65,18 +65,18 @@ namespace SQLite
                 command.ExecuteNonQuery();
             }catch(InvalidCastException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch(System.Data.SqlClient.SqlException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch(System.IO.IOException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }catch(InvalidOperationException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             Ranking.Log.Info("【SQL】Connect to [" + TableName + "] table.");
             return;
@@ -113,19 +113,19 @@ namespace SQLite
             }
             catch (InvalidCastException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (System.IO.IOException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
 
             Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
@@ -149,19 +149,19 @@ namespace SQLite
             }
             catch (InvalidCastException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (System.IO.IOException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
 
             Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
@@ -181,19 +181,19 @@ namespace SQLite
             }
             catch (InvalidCastException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (System.IO.IOException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
             Ranking.Log.Info("【SQL】Exexute [" + command.CommandText + "].");
             this.ConsoleWriteData(reader);
@@ -234,7 +234,7 @@ namespace SQLite
                 }
             }catch(System.Data.SqlClient.SqlException ex)
             {
-                Ranking.Log.Warn(ex.Message);
+                Ranking.Log.Fatal(ex.Message);
             }
         }
 
