@@ -6,7 +6,7 @@ namespace SQLite
 {
     class SQLite
     {
-        public static string GameName { private set; get; }
+        private static UInt64 GameID { set; get; }
         private static SQLiteConnection _conn = null;
         private string DbFilePath = ConfigPath.LocalUserAppDataPath;
         private const string FileNmae = "ranking.db";
@@ -45,7 +45,7 @@ namespace SQLite
         public void CreateTable()
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameNameINCommand(CreateTableCommand, SQLite.GameName);
+            command.CommandText = GameIDINCommand(CreateTableCommand, SQLite.GameID);
             command.ExecuteNonQuery();
             return;
         }
@@ -57,7 +57,7 @@ namespace SQLite
         {
             
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameNameINCommand(InsertCommand, SQLite.GameName);
+            command.CommandText = GameIDINCommand(InsertCommand, SQLite.GameID);
 
             SQLiteParameter SaveTime = command.CreateParameter();
             SaveTime.ParameterName = "@1";
@@ -84,7 +84,7 @@ namespace SQLite
         public void SelectRecord()
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameNameINCommand(SelectCommand, SQLite.GameName);
+            command.CommandText = GameIDINCommand(SelectCommand, SQLite.GameID);
             var reader = command.ExecuteReader();
             this.ConsoleWriteData(reader);
             return;
@@ -94,7 +94,7 @@ namespace SQLite
         {
             // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameNameINCommand(AllSelectCommand, SQLite.GameName);
+            command.CommandText = GameIDINCommand(AllSelectCommand, SQLite.GameID);
             var reader = command.ExecuteReader();
             this.ConsoleWriteData(reader);
             return;
@@ -113,9 +113,9 @@ namespace SQLite
         /// <summary>
         /// ゲーム名設定
         /// </summary>
-        public static void SetGameName(string name)
+        public static void SetGameName(UInt64 id)
         {
-            SQLite.GameName = name;
+            SQLite.GameID = id;
         }
 
         private void ConsoleWriteData(SQLiteDataReader data)
@@ -131,11 +131,19 @@ namespace SQLite
             }
         }
 
-        private string GameNameINCommand(string command, string name)
+        /// <summary>
+        /// SQLコマンドにゲーム名テーブルを指定する
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private string GameIDINCommand(string command, UInt64 id)
         {
             Console.WriteLine(command);
-            string result = Regex.Replace(command, "@GameName", name);
+            string result = Regex.Replace(command, "@GameName", id.ToString());
+#if DEBUG
             Console.WriteLine(result);
+#endif
             return result;
         }
     }
