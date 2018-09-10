@@ -22,7 +22,7 @@ namespace Ranking
 
         private string ConfigFilePath = ConfigPath.LocalUserAppDataPath + "/config.txt";
 
-        private const string GET_DATA_URL = "/ranking/GetData.php";
+        private const string GET_DATA_URL  = "/ranking/GetData.php";
         private const string SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = new SQLite.SQLite();
@@ -217,7 +217,8 @@ namespace Ranking
         /// <param name="data"></param>
         public void SaveOnline(RankingData data)
         {
-            Log.Info("【Onlie】Get Online start.");
+
+            Log.Info("【Onlie】Save Online start.");
             try
             {
                 var task = Task.Run(() =>
@@ -225,7 +226,7 @@ namespace Ranking
                     return this.SendOnlineSaveData(data);
                 });
                 Log.Debug(task.Result);
-                Log.Info("【SUCCESS】【Onlie】Get Online success.");
+                Log.Info("【SUCCESS】【Onlie】Save Online success.");
             }
             catch (AggregateException ex)
             {
@@ -267,6 +268,7 @@ namespace Ranking
         /// <param name="newdata"></param>
         public void SaveLocal(RankingData newdata)
         {
+            Log.Info("【Onlie】Save local start.");
             s.ConnectionOpen();
             s.InsertRecord(newdata);
             s.ConnectionClose();
@@ -279,6 +281,7 @@ namespace Ranking
             var client = new System.Net.Http.HttpClient();
 
             Log.Info("【Onlie】Access to server.");
+            Log.Info("【Onlie】Address is [" + BaseUrl + SAVE_DATA_URL + "].");
             var response = await client.PostAsync(BaseUrl + SAVE_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -292,7 +295,8 @@ namespace Ranking
             var content = new System.Net.Http.FormUrlEncodedContent(postid);
             var client = new System.Net.Http.HttpClient();
 
-            Log.Info("【SUCCESS】【Onlie】Access to server.");
+            Log.Info("【Onlie】Access to server.");
+            Log.Info("【Onlie】Address is [" + BaseUrl + GET_DATA_URL + "].");
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
