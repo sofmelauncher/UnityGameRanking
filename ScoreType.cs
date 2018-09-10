@@ -11,7 +11,7 @@ namespace CsharpRanking
     /// </summary>
     public enum ScoreType
     {
-        Time,
-        Number
+        TIME,
+        NUMBER
     }
 }
