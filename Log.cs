@@ -35,17 +35,16 @@ namespace CsharpRanking
         {
             //yyyy-MM-dd HH:mm:ss 【xxxxx】 
             StackTrace st = new StackTrace(1, true);
-            string fullname = st.GetFrame(1).GetMethod().ReflectedType.FullName;
-            string methodname = st.GetFrame(1).GetMethod().Name;
-            string lineNumber = st.GetFrame(0).GetFileLineNumber().ToString();
-            string contents = string.Format("{0} [{1,5}] [{2}.{3}() line: {4,3}] - {5}",
+            string name = st.GetFrame(1).GetMethod().ReflectedType.FullName + st.GetFrame(1).GetMethod().Name;
+            string lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
+            string contents = string.Format("{0} [{1,-5}] [{2,35}() line: {3,3}] - {4}",
                 GetTime,
                 level.ToString(),
-                fullname,
-                methodname,
+                name,
                 lineNumber,
                 msg
             );
+            Console.WriteLine(contents);
             try
             {
                 using (StreamWriter sw = new StreamWriter(FilePath, true, Encoding.UTF8))
@@ -53,15 +52,15 @@ namespace CsharpRanking
                     sw.WriteLine(contents);
                 }
             }
-            catch(Exception ex)
+            catch(ArgumentException ex)
             {
-                Console.WriteLine(ex);
+                Log.Warn(ex.Message);
             }
         }
 
         private static string GetTime {
             get {
-                return DateTime.Now.ToString("yyyy-MM-dd HH:mm:sss");
+                return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
             }
         }

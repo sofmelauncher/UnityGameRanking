@@ -35,6 +35,7 @@ namespace SQLite
             _conn.ConnectionString = 
                 "Data Source=" + DbFilePath + "\\" + FileNmae + ";Version=3;";
             _conn.Open();
+            CsharpRanking.Log.Info("Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
             return;
         }
 
@@ -47,7 +48,7 @@ namespace SQLite
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(CreateTableCommand);
             command.ExecuteNonQuery();
-            Console.WriteLine("「" + TableName + "」テーブルに接続");
+            CsharpRanking.Log.Info("Connect to [" + TableName + "] table.");
             return;
         }
 
@@ -65,7 +66,7 @@ namespace SQLite
             SaveTime.Value = data.SaveTime;
 
             SQLiteParameter DataName = command.CreateParameter();
-            DataName.ParameterName = "@2";
+            DataName.ParameterName = "@2"; 
             DataName.Value = data.DataName;
 
             SQLiteParameter ScoreValue = command.CreateParameter();
@@ -76,6 +77,10 @@ namespace SQLite
             command.Parameters.Add(DataName);
             command.Parameters.Add(ScoreValue);
             command.ExecuteNonQuery();
+            CsharpRanking.Log.Info("Execute [" + command.CommandText + "].");
+            CsharpRanking.Log.Info("@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
+            CsharpRanking.Log.Info("@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
+            CsharpRanking.Log.Info("@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
             return;
         }
 
@@ -87,6 +92,7 @@ namespace SQLite
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(SelectCommand);
             var reader = command.ExecuteReader();
+            CsharpRanking.Log.Info("Execute [" + command.CommandText + "].");
             this.ConsoleWriteData(reader);
             return;
         }
@@ -97,6 +103,7 @@ namespace SQLite
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(AllSelectCommand);
             var reader = command.ExecuteReader();
+            CsharpRanking.Log.Info("Exexute [" + command.CommandText + "].");
             this.ConsoleWriteData(reader);
             return;
         }
@@ -108,6 +115,7 @@ namespace SQLite
         public void ConnectionClose()
         {
             _conn.Close();
+            CsharpRanking.Log.Info("Data base close.");
             return;
         }
 
@@ -141,9 +149,6 @@ namespace SQLite
         {
             Console.WriteLine(command);
             string result = Regex.Replace(command, "@GameName", TableName);
-#if DEBUG
-            Console.WriteLine(result);
-#endif
             return result;
         }
 

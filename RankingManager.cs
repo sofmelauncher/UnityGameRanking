@@ -37,7 +37,11 @@ namespace CsharpRanking
         /// <param name="orderType">OrderType型, スコアデータのソート順</param>
         public RankingManager(string gamename, UInt64 gameid, ScoreType scoreType, OrderType orderType)
         {
-            if (!RankingData.SetGameID(gameid)) throw new System.ArgumentOutOfRangeException("Game ID is out of range", "gameid");
+            if (!RankingData.SetGameID(gameid))
+            {
+                Log.Warn("Game ID is out of range.");
+                throw new System.ArgumentOutOfRangeException("Game ID is out of range", "gameid");
+            }
             RankingData.SetScoreType(scoreType);
             RankingManager.Oder = orderType;
             SQLite.SQLite.SetGameName(gameid);
@@ -54,17 +58,13 @@ namespace CsharpRanking
             s.ConnectionClose();
             if (this.LoadServerAdress())
             {
-#if DEBUG
-                Console.WriteLine("Success for address read");
-#endif
+                Log.Info("Success for address read.");
                 RankingManager.CanOnline = true;
                 return true;
             }
             else
             {
-#if DEBUG
-                Console.WriteLine("Failed to address read");
-#endif
+                Log.Info("Failed to address read.");
                 RankingManager.CanOnline = false;
                 return false;
             }
@@ -81,8 +81,9 @@ namespace CsharpRanking
             s.ConnectionOpen();
             s.InsertRecord(newdata);
             s.ConnectionClose();
-            
-            if (CanOnline) {
+
+            if (CanOnline)
+            {
                 NameValueCollection nvc = new NameValueCollection();
                 //Console.WriteLine(this.SaveAndGetData(newdata));
                 try
@@ -91,15 +92,38 @@ namespace CsharpRanking
                     {
                         return this.SaveAndGetData(newdata);
                     });
-#if DEBUG
                     System.Console.WriteLine(task.Result);
-                }catch(Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
                 }
-#endif
-            }
+                catch (AggregateException ex)
+                {
+                    foreach (Exception e in ex.Flatten().InnerExceptions)
+                    {
+                        Exception exNestedInnerException = e;
+                        do
+                        {
+                            if (!string.IsNullOrEmpty(exNestedInnerException.Message))
+                            {
+                                Log.Warn(exNestedInnerException.Message);
+                            }
+                            exNestedInnerException = exNestedInnerException.InnerException;
+                        }
+                        while (exNestedInnerException != null);
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    Log.Warn(ex.Message);
+                }
+                catch (System.Net.WebException ex)
+                {
+                    Log.Warn(ex.Message);
+                }
+                catch (System.Net.Sockets.SocketException ex)
+                {
+                    Log.Warn(ex.Message);
+                }
                 return;
+            }
         }
         
         /// <summary>
@@ -129,7 +153,7 @@ namespace CsharpRanking
         /// <returns>true:読み込み成功, false:読み込み失敗</returns>
         private bool LoadServerAdress()
         {
-            System.IO.StreamReader sr;
+            System.IO.StreamReader sr = null;
 
             try
             {
@@ -137,14 +161,32 @@ namespace CsharpRanking
             }
             catch (System.IO.FileNotFoundException ex)
             {
-                System.Console.WriteLine("File not fount.");
-                System.Console.WriteLine(ex.Message);
+                Log.Warn(ex.Message);
                 return false;
             }
             catch (System.UnauthorizedAccessException ex)
             {
-                System.Console.WriteLine("Access denied.");
-                System.Console.WriteLine(ex.Message);
+                Log.Warn(ex.Message);
+                return false;
+            }
+            catch (NotSupportedException ex)
+            {
+                Log.Warn(ex.Message);
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                Log.Warn(ex.Message);
+                return false;
+            }
+            catch (System.IO.PathTooLongException ex)
+            {
+                Log.Warn(ex.Message);
+                return false;
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                Log.Warn(ex.Message);
                 return false;
             }
 
