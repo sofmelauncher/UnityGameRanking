@@ -9,7 +9,7 @@ namespace Ranking
     /// <summary>
     /// ランキングデータクラス
     /// </summary>
-    public class RankingData
+    public class RankingData:IEquatable<RankingData>
     {
         public static UInt64 GameID { private set; get; }
         public UInt64 DataID { private set; get; }
@@ -17,7 +17,7 @@ namespace Ranking
         public string DataName { private set; get; }
 
         private static ScoreType Type { set; get; }
-        private string ScoreValue { set; get; }
+        public double ScoreValue { private set; get; }
 
         /// <summary>
         /// ランキングデータのスコアのデータ型を指定
@@ -34,11 +34,18 @@ namespace Ranking
         /// </summary>
         /// <param name="data">スコアデータ</param>
         /// <param name="name">データ名</param>
-        public RankingData(string data, string name = "")
+        public RankingData(double data, string name = "")
         {
             this.ScoreValue = data;
-            this.DataName = name;
             this.SaveTime = DateTime.Now;
+            this.DataName = name;
+        }
+        public RankingData(UInt64 dataid, DateTime time, string name, double data)
+        {
+            this.DataID = dataid;
+            this.ScoreValue = data;
+            this.SaveTime = time;
+            this.DataName = name;
         }
 
         /// <summary>
@@ -59,7 +66,7 @@ namespace Ranking
         public double ToDouble
         {
             get{
-                return double.Parse(this.ScoreValue);
+                return this.ScoreValue;
             }
         }
 
@@ -69,7 +76,7 @@ namespace Ranking
         public TimeSpan ToTime
         {
             get {
-                long t = long.Parse(ScoreValue);
+                long t = long.Parse(ScoreValue.ToString());
                 TimeSpan ts = new TimeSpan(t);
                 return ts;
             }
@@ -86,9 +93,34 @@ namespace Ranking
                     { "GameID", RankingData.GameID.ToString() },
                     { "DataID", "0" },
                     { "DataName", this.DataName },
-                    { "Score", this.ScoreValue },
+                    { "Score", this.ScoreValue.ToString() },
                     { "Time", this.SaveTime.ToString("yyyy-MM-dd HH:mm:ss") }
                 };
+        }
+
+        public override int GetHashCode()
+        {
+            return GameID.GetHashCode() ^
+                    DataID.GetHashCode() ^
+                    SaveTime.GetHashCode() ^
+                    DataName.GetHashCode() ^
+                    Type.GetHashCode() ^
+                    ScoreValue.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as RankingData;
+            if (other == null) return false;
+            return this.DataID == other.DataID &&
+                    this.DataName == other.DataName &&
+                    this.SaveTime == other.SaveTime &&
+                    this.ScoreValue == other.ScoreValue;
+        }
+        public bool Equals(RankingData other)
+        {
+            if (other == null) return false;
+            return (this.DataID.Equals(other.DataID));
         }
 
     }
