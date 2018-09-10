@@ -17,10 +17,10 @@ namespace CsharpRanking
     {
         //= "http://localhost/runking/GetData.php";
 
-        public static OrderType Oder { private set; get; }
-        public static bool CanOnline { private set; get; }
+        private static OrderType Oder { set; get; }
+        private static bool CanOnline { set; get; }
 
-        public string BaseUrl { private set; get; }
+        private string BaseUrl { set; get; }
 
         private string ConfigFilePath = ConfigPath.LocalUserAppDataPath + "/config.txt";
 
@@ -28,12 +28,19 @@ namespace CsharpRanking
 
         SQLite.SQLite s = new SQLite.SQLite();
 
+        /// <summary>
+        /// コンストラクタ, ランキングマネージャーの初期設定
+        /// </summary>
+        /// <param name="gamename">ゲーム名を指定</param>
+        /// <param name="gameid">ゲームのID</param>
+        /// <param name="scoreType">ScoreType型, スコアデータのデータ型</param>
+        /// <param name="orderType">OrderType型, スコアデータのソート順</param>
         public RankingManager(string gamename, UInt64 gameid, ScoreType scoreType, OrderType orderType)
         {
             if (!RankingData.SetGameID(gameid)) throw new System.ArgumentOutOfRangeException("Game ID is out of range", "gameid");
             RankingData.SetScoreType(scoreType);
             RankingManager.Oder = orderType;
-            SQLite.SQLite.SetGameName(gamename);
+            SQLite.SQLite.SetGameName(gameid);
         }
 
         /// <summary>
@@ -110,7 +117,7 @@ namespace CsharpRanking
             var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
             var client = new System.Net.Http.HttpClient();
 #if DEBUG
-            Console.WriteLine(content);
+            Console.WriteLine(content.Headers);
 #endif
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
