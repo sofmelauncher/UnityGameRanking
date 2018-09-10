@@ -45,8 +45,9 @@ namespace SQLite
         public void CreateTable()
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameIDINCommand(CreateTableCommand, SQLite.GameID);
+            command.CommandText = GameIDINCommand(CreateTableCommand);
             command.ExecuteNonQuery();
+            Console.WriteLine("「" + TableName + "」テーブルに接続");
             return;
         }
 
@@ -57,7 +58,7 @@ namespace SQLite
         {
             
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameIDINCommand(InsertCommand, SQLite.GameID);
+            command.CommandText = GameIDINCommand(InsertCommand);
 
             SQLiteParameter SaveTime = command.CreateParameter();
             SaveTime.ParameterName = "@1";
@@ -84,7 +85,7 @@ namespace SQLite
         public void SelectRecord()
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameIDINCommand(SelectCommand, SQLite.GameID);
+            command.CommandText = GameIDINCommand(SelectCommand);
             var reader = command.ExecuteReader();
             this.ConsoleWriteData(reader);
             return;
@@ -94,7 +95,7 @@ namespace SQLite
         {
             // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameIDINCommand(AllSelectCommand, SQLite.GameID);
+            command.CommandText = GameIDINCommand(AllSelectCommand);
             var reader = command.ExecuteReader();
             this.ConsoleWriteData(reader);
             return;
@@ -135,16 +136,22 @@ namespace SQLite
         /// SQLコマンドにゲーム名テーブルを指定する
         /// </summary>
         /// <param name="command"></param>
-        /// <param name="id"></param>
         /// <returns></returns>
-        private string GameIDINCommand(string command, UInt64 id)
+        private string GameIDINCommand(string command)
         {
             Console.WriteLine(command);
-            string result = Regex.Replace(command, "@GameName", id.ToString());
+            string result = Regex.Replace(command, "@GameName", TableName);
 #if DEBUG
             Console.WriteLine(result);
 #endif
             return result;
+        }
+
+        private string TableName
+        {
+            get {
+                return "GameID" + SQLite.GameID.ToString();
+            }
         }
     }
 }
