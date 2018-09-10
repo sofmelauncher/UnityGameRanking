@@ -25,7 +25,8 @@ namespace Ranking
 
         private string ConfigFilePath = ConfigPath.LocalUserAppDataPath + "/config.txt";
 
-        private const string GET_DATA_URL = "/runking/GetData.php";
+        private const string GET_DATA_URL = "/ranking/GetData.php";
+        private const string SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = new SQLite.SQLite();
 
@@ -66,7 +67,7 @@ namespace Ranking
                 Log.Info("RankingManager Initialization success.");
                 return true;
             }
-            else if(RankingManager.IsOnline)
+            else if (RankingManager.IsOnline)
             {
                 Log.Warn("【File】Failed to address read.");
                 RankingManager.CanOnline = false;
@@ -79,10 +80,10 @@ namespace Ranking
         /// <summary>
         /// 新規データをセットして最新ランキングを取得
         /// </summary>
-        public void DataSetAndLoad<Type>(Type data, string dataName = "")
+        public void DataSetAndLoad<Type>(double data, string dataName = "")
             where Type : struct
         {
-            RankingData newdata = new RankingData(data.ToString(), dataName);
+            RankingData newdata = new RankingData(data, dataName);
 
             SaveLocal(newdata);
 
@@ -92,13 +93,67 @@ namespace Ranking
                 GetOnlineData();
             }
         }
-        
+
+        public void GetData()
+        {
+            if(IsOnline && CanOnline)
+            {
+                this.GetOnlineData();
+            }
+            else
+            {
+                this.GetLocalData();
+            }
+        }
+
+
         /// <summary>
         /// 外部データベースからデータ取得
         /// </summary>
-        public void GetOnlineData()
+        public bool GetOnlineData()
         {
-
+            try
+            {
+                var task = Task.Run(() =>
+                {
+                    return this.SendOnlieGetData();
+                });
+                System.Console.WriteLine(task.Result);
+                return true;
+            }
+            catch (AggregateException ex)
+            {
+                foreach (Exception e in ex.Flatten().InnerExceptions)
+                {
+                    Exception exNestedInnerException = e;
+                    do
+                    {
+                        if (!string.IsNullOrEmpty(exNestedInnerException.Message))
+                        {
+                            Log.Fatal(exNestedInnerException.Message);
+                        }
+                        exNestedInnerException = exNestedInnerException.InnerException;
+                    }
+                    while (exNestedInnerException != null);
+                }
+                return false;
+            }
+            catch (HttpRequestException ex)
+            {
+                Log.Fatal(ex.Message);
+                return false;
+            }
+            catch (System.Net.WebException ex)
+            {
+                Log.Fatal(ex.Message);
+                return false;
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                Log.Fatal(ex.Message);
+                return false;
+            }
+            return false;
         }
 
         /// <summary>
@@ -107,8 +162,17 @@ namespace Ranking
         public void GetLocalData()
         {
             s.ConnectionOpen();
-            s.SelectRecord();
+            var list = s.SelectRecord();
             s.ConnectionClose();
+            foreach(var s in list)
+            {
+                Log.Debug(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
+                    s.DataID,
+                    s.SaveTime,
+                    s.DataName,
+                    s.ScoreValue
+                    ));
+            }
         }
 
         /// <summary>
@@ -123,7 +187,7 @@ namespace Ranking
             {
                 var task = Task.Run(() =>
                 {
-                    return this.SaveAndGetData(data);
+                    return this.SendOnlineSaveData(data);
                 });
                 System.Console.WriteLine(task.Result);
             }
@@ -168,10 +232,23 @@ namespace Ranking
             s.InsertRecord(newdata);
             s.ConnectionClose();
         }
-        
-        private async Task<string> SaveAndGetData(RankingData data)
+
+        private async Task<string> SendOnlineSaveData(RankingData data)
         {
             var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
+            var client = new System.Net.Http.HttpClient();
+
+            var response = await client.PostAsync(BaseUrl + SAVE_DATA_URL, content);
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        private async Task<string> SendOnlieGetData()
+        {
+            Dictionary<string, string> postid =  new Dictionary<string, string>
+                    {
+                        { "GameID", RankingData.GameID.ToString() }
+                    };
+            var content = new System.Net.Http.FormUrlEncodedContent(postid);
             var client = new System.Net.Http.HttpClient();
 
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace SQLite
 {
@@ -11,19 +12,19 @@ namespace SQLite
         private string DbFilePath = ConfigPath.LocalUserAppDataPath;
         private const string FileNmae = "ranking.db";
 
-        private const string CreateTableCommand = 
+        private const string CreateTableCommand =
             "CREATE TABLE IF NOT EXISTS @GameName (DataID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
             + "SaveTime DATETIME NOT NULL,"
             + "DataName VARCHAR(100) NULL,"
             + "ScoreValue DOUBLE NOT NULL)";
 
-        private const string InsertCommand = 
+        private const string InsertCommand =
             "INSERT INTO @GameName (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
 
-        private const string SelectCommand = 
-            "SELECT * FROM @GameName ORDER BY SaveTime DESC;";
+        private const string SelectCommand =
+            "SELECT * FROM @GameName ORDER BY SaveTime DESC LIMIT 5;";
 
-        private const string AllSelectCommand = 
+        private const string AllSelectCommand =
             "SELECT * FROM @GameName;";
 
         /// <summary>
@@ -32,15 +33,15 @@ namespace SQLite
         public void ConnectionOpen()
         {
             _conn = new SQLiteConnection();
-            _conn.ConnectionString = 
+            _conn.ConnectionString =
                 "Data Source=" + DbFilePath + "\\" + FileNmae + ";Version=3;";
             try
             {
                 _conn.Open();
-            }catch(InvalidOperationException ex)
+            } catch (InvalidOperationException ex)
             {
-                
-            }catch(System.Data.SqlClient.SqlException ex)
+
+            } catch (System.Data.SqlClient.SqlException ex)
             {
                 Ranking.Log.Fatal(ex.Message);
             }
@@ -63,18 +64,18 @@ namespace SQLite
             try
             {
                 command.ExecuteNonQuery();
-            }catch(InvalidCastException ex)
+            } catch (InvalidCastException ex)
             {
                 Ranking.Log.Fatal(ex.Message);
             }
-            catch(System.Data.SqlClient.SqlException ex)
+            catch (System.Data.SqlClient.SqlException ex)
             {
                 Ranking.Log.Fatal(ex.Message);
             }
-            catch(System.IO.IOException ex)
+            catch (System.IO.IOException ex)
             {
                 Ranking.Log.Fatal(ex.Message);
-            }catch(InvalidOperationException ex)
+            } catch (InvalidOperationException ex)
             {
                 Ranking.Log.Fatal(ex.Message);
             }
@@ -87,7 +88,7 @@ namespace SQLite
         /// </summary>
         public void InsertRecord(Ranking.RankingData data)
         {
-            
+
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(InsertCommand);
 
@@ -96,7 +97,7 @@ namespace SQLite
             SaveTime.Value = data.SaveTime;
 
             SQLiteParameter DataName = command.CreateParameter();
-            DataName.ParameterName = "@2"; 
+            DataName.ParameterName = "@2";
             DataName.Value = data.DataName;
 
             SQLiteParameter ScoreValue = command.CreateParameter();
@@ -138,7 +139,7 @@ namespace SQLite
         /// <summary>
         /// レコードを取得
         /// </summary>
-        public void SelectRecord()
+        public List<Ranking.RankingData> SelectRecord()
         {
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(SelectCommand);
@@ -165,8 +166,16 @@ namespace SQLite
             }
 
             Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
-            this.ConsoleWriteData(reader);
-            return;
+
+            var list = new List<Ranking.RankingData>();
+
+            while (reader.Read())
+            {
+                list.Add(new Ranking.RankingData(Convert.ToUInt64(reader.GetInt32(0)), reader.GetDateTime(1), reader.GetString(2), reader.GetDouble(3)));
+            }
+
+
+            return list;
         }
 
         public void AllSelectRecord()
@@ -196,7 +205,7 @@ namespace SQLite
                 Ranking.Log.Fatal(ex.Message);
             }
             Ranking.Log.Info("【SQL】Exexute [" + command.CommandText + "].");
-            this.ConsoleWriteData(reader);
+            //this.ConsoleWriteData(reader);
             return;
         }
 
@@ -232,7 +241,7 @@ namespace SQLite
                         data.GetDouble(3)
                     ));
                 }
-            }catch(System.Data.SqlClient.SqlException ex)
+            } catch (System.Data.SqlClient.SqlException ex)
             {
                 Ranking.Log.Fatal(ex.Message);
             }

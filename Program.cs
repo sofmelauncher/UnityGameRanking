@@ -12,14 +12,14 @@ namespace Ranking
     {
         static void Main(string[] args)
         {
-            var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.ASC);
+            var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.ASC,false);
             if (w.Init())
             {
-                w.DataSetAndLoad(1.8, "aa");
+                //w.DataSetAndLoad(1.8, "aa");
             }
             else
             {
-                Console.WriteLine("Filed to init.");
+                Log.Debug("Filed to init.");
             }
             w.GetData();
 
