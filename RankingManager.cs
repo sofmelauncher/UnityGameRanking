@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Specialized;
 using System.Net.Http;
 
-namespace CsharpRanking
+namespace Ranking
 {
     /// <summary>
     /// ランキングデータを管理するクラス

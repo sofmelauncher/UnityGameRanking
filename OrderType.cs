@@ -1,4 +1,4 @@
-﻿namespace CsharpRanking
+﻿namespace Ranking
 {
     /// <summary>
     /// 昇順 or 降順

@@ -42,13 +42,13 @@ namespace SQLite
                 
             }catch(System.Data.SqlClient.SqlException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (System.Configuration.ConfigurationException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
-            CsharpRanking.Log.Info("【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
+            Ranking.Log.Info("【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
             return;
         }
 
@@ -65,27 +65,27 @@ namespace SQLite
                 command.ExecuteNonQuery();
             }catch(InvalidCastException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch(System.Data.SqlClient.SqlException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch(System.IO.IOException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }catch(InvalidOperationException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
-            CsharpRanking.Log.Info("【SQL】Connect to [" + TableName + "] table.");
+            Ranking.Log.Info("【SQL】Connect to [" + TableName + "] table.");
             return;
         }
 
         /// <summary>
         /// レコードを挿入
         /// </summary>
-        public void InsertRecord(CsharpRanking.RankingData data)
+        public void InsertRecord(Ranking.RankingData data)
         {
             
             SQLiteCommand command = _conn.CreateCommand();
@@ -113,25 +113,25 @@ namespace SQLite
             }
             catch (InvalidCastException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (System.IO.IOException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
 
-            CsharpRanking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
-            CsharpRanking.Log.Info("【SQL】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
-            CsharpRanking.Log.Info("【SQL】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
-            CsharpRanking.Log.Info("【SQL】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
+            Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
+            Ranking.Log.Info("【SQL】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
+            Ranking.Log.Info("【SQL】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
+            Ranking.Log.Info("【SQL】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
             return;
         }
 
@@ -149,22 +149,22 @@ namespace SQLite
             }
             catch (InvalidCastException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (System.IO.IOException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
 
-            CsharpRanking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
+            Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
             this.ConsoleWriteData(reader);
             return;
         }
@@ -181,21 +181,21 @@ namespace SQLite
             }
             catch (InvalidCastException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (System.IO.IOException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
-            CsharpRanking.Log.Info("【SQL】Exexute [" + command.CommandText + "].");
+            Ranking.Log.Info("【SQL】Exexute [" + command.CommandText + "].");
             this.ConsoleWriteData(reader);
             return;
         }
@@ -207,7 +207,7 @@ namespace SQLite
         public void ConnectionClose()
         {
             _conn.Close();
-            CsharpRanking.Log.Info("【SQL】Data base close.");
+            Ranking.Log.Info("【SQL】Data base close.");
             return;
         }
 
@@ -234,7 +234,7 @@ namespace SQLite
                 }
             }catch(System.Data.SqlClient.SqlException ex)
             {
-                CsharpRanking.Log.Warn(ex.Message);
+                Ranking.Log.Warn(ex.Message);
             }
         }
 

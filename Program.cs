@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace CsharpRanking
+namespace Ranking
 {
     class Program
     {
