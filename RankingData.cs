@@ -87,7 +87,7 @@ namespace CsharpRanking
                     { "DataID", "0" },
                     { "DataName", this.DataName },
                     { "Score", this.ScoreValue },
-                    { "Time", this.SaveTime.ToString("yyyy-MM-ddTHH:mm:ss") }
+                    { "Time", this.SaveTime.ToString("yyyy-MM-dd HH:mm:sss") }
                 };
         }
 

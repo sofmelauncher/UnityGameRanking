@@ -117,7 +117,7 @@ namespace CsharpRanking
             var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
             var client = new System.Net.Http.HttpClient();
 #if DEBUG
-            Console.WriteLine(content.Headers);
+            Console.WriteLine(content.ReadAsStringAsync());
 #endif
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
