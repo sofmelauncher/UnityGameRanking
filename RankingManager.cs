@@ -162,11 +162,11 @@ namespace Ranking
         public void GetLocalData()
         {
             s.ConnectionOpen();
-            var list = s.SelectRecord();
+            var list = s.SelectRecord(RankingManager.Oder);
             s.ConnectionClose();
             foreach(var s in list)
             {
-                Log.Debug(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
+                Log.Debug(string.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
                     s.DataID,
                     s.SaveTime,
                     s.DataName,

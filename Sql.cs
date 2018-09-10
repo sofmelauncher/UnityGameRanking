@@ -9,6 +9,7 @@ namespace SQLite
     {
         private static UInt64 GameID { set; get; }
         private static SQLiteConnection _conn = null;
+        private static UInt64 limit = 10;
         private string DbFilePath = ConfigPath.LocalUserAppDataPath;
         private const string FileNmae = "ranking.db";
 
@@ -22,10 +23,15 @@ namespace SQLite
             "INSERT INTO @GameName (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
 
         private const string SelectCommand =
-            "SELECT * FROM @GameName ORDER BY SaveTime DESC LIMIT 5;";
+            "SELECT * FROM @GameName ORDER BY SaveTime {0} LIMIT {1};";
 
         private const string AllSelectCommand =
             "SELECT * FROM @GameName;";
+
+        public static void SetLimit(UInt64 l)
+        {
+            SQLite.limit = l;
+        }
 
         /// <summary>
         /// データベースに接続
@@ -137,13 +143,16 @@ namespace SQLite
         }
 
         /// <summary>
-        /// レコードを取得
+        /// 指定の個数、並びのレコードを取得
         /// </summary>
-        public List<Ranking.RankingData> SelectRecord()
+        /// <param name="type">OrderType型</param>
+        /// <returns>RankignData型のレコードのリスト</returns>
+        public List<Ranking.RankingData> SelectRecord(Ranking.OrderType type)
         {
             SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = GameIDINCommand(SelectCommand);
+            command.CommandText = string.Format(GameIDINCommand(SelectCommand),type.ToString(),SQLite.limit);
             SQLiteDataReader reader = null;
+            Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
             try
             {
                 reader = command.ExecuteReader();
@@ -165,7 +174,6 @@ namespace SQLite
                 Ranking.Log.Fatal(ex.Message);
             }
 
-            Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
 
             var list = new List<Ranking.RankingData>();
 
@@ -178,9 +186,12 @@ namespace SQLite
             return list;
         }
 
-        public void AllSelectRecord()
+        /// <summary>
+        /// 全レコードの取得
+        /// </summary>
+        /// <returns>全レコードのRankingDataクラス型のリスト</returns>
+        public List<Ranking.RankingData> AllSelectRecord()
         {
-            // 全データの取得
             SQLiteCommand command = _conn.CreateCommand();
             command.CommandText = GameIDINCommand(AllSelectCommand);
             SQLiteDataReader reader = null;
@@ -205,8 +216,16 @@ namespace SQLite
                 Ranking.Log.Fatal(ex.Message);
             }
             Ranking.Log.Info("【SQL】Exexute [" + command.CommandText + "].");
-            //this.ConsoleWriteData(reader);
-            return;
+
+            var list = new List<Ranking.RankingData>();
+
+            while (reader.Read())
+            {
+                list.Add(new Ranking.RankingData(Convert.ToUInt64(reader.GetInt32(0)), reader.GetDateTime(1), reader.GetString(2), reader.GetDouble(3)));
+            }
+
+
+            return list;
         }
 
 
@@ -234,7 +253,7 @@ namespace SQLite
             {
                 while (data.Read())
                 {
-                    Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,28}, Name = {2,10}, Score = {3,5:#.###}",
+                    Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
                         data.GetInt32(0),
                         data.GetString(1),
                         data.GetString(2),
