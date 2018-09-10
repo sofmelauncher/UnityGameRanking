@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Specialized;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace Ranking
 {
@@ -78,11 +76,9 @@ namespace Ranking
         /// <summary>
         /// 新規データをセットして最新ランキングを取得
         /// </summary>
-        public void DataSetAndLoad<Type>(double data, string dataName = "")
-            where Type : struct
+        public void DataSetAndLoad(double data, string dataName = "")
         {
             RankingData newdata = new RankingData(data, dataName);
-
             SaveLocal(newdata);
 
             if (IsOnline && CanOnline)
@@ -91,21 +87,40 @@ namespace Ranking
                 GetOnlineData();
             }
         }
+        
+        public void SaveData(RankingData data)
+        {
+            SaveLocal(data);
+            if (IsOnline && CanOnline)
+            {
+                SaveOnline(data);
+            }
+        }
+        public void SaveData(double data, string dataName = "")
+        {
+            RankingData newdata = new RankingData(data, dataName);
+            SaveLocal(newdata);
+            if (IsOnline && CanOnline)
+            {
+                SaveOnline(newdata);
+            }
+        }
+
 
         public List<Ranking.RankingData> GetData()
         {
             var getlist = new List<Ranking.RankingData>();
             if (IsOnline && CanOnline)
             {
-                try
-                {
+                //try
+                //{
                     getlist = this.GetOnlineData();
-                }catch(Exception ex)
-                {
-                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
-                    RankingManager.CanOnline = false;
-                    getlist = this.GetLocalData();
-                }
+                //}catch(Exception ex)
+                //{
+                //    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+                //    RankingManager.CanOnline = false;
+                //    getlist = this.GetLocalData();
+                //}
             }
             else
             {
@@ -129,7 +144,17 @@ namespace Ranking
                     return this.SendOnlieGetData();
                 });
                 Log.Debug(task.Result);
-                Log.Info("【SUCCESS】【Onlie】Get Online finish.");
+                r = JsonConvert.DeserializeObject<List<RankingData>>(task.Result);
+                foreach (var s in r)
+                {
+                    Log.Debug(string.Format("【Onlice】ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
+                        s.DataID,
+                        s.SaveTime,
+                        s.DataName,
+                        s.ScoreValue
+                        ));
+                }
+                Log.Info("【SUCCESS】【Onlie】Get Online success.");
                 return r;
             }
             catch (AggregateException ex)
@@ -176,7 +201,7 @@ namespace Ranking
             s.ConnectionClose();
             foreach(var s in list)
             {
-                Log.Debug(string.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
+                Log.Debug(string.Format("【Local】ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
                     s.DataID,
                     s.SaveTime,
                     s.DataName,
@@ -200,7 +225,7 @@ namespace Ranking
                     return this.SendOnlineSaveData(data);
                 });
                 Log.Debug(task.Result);
-                Log.Info("【SUCCESS】【Onlie】Get Online finish.");
+                Log.Info("【SUCCESS】【Onlie】Get Online success.");
             }
             catch (AggregateException ex)
             {
@@ -245,6 +270,7 @@ namespace Ranking
             s.ConnectionOpen();
             s.InsertRecord(newdata);
             s.ConnectionClose();
+            Log.Info("【SUCCESS】Successful Local.");
         }
 
         private async Task<string> SendOnlineSaveData(RankingData data)
@@ -324,7 +350,7 @@ namespace Ranking
         {
             SQLite.SQLite.SetLimit(l);
             RankingManager.limit = l;
-            Log.Info("【SUCCESS】Set limit is" + l.ToString());
+            Log.Info("【SUCCESS】Set limit is " + l.ToString());
             return;
         }
     }

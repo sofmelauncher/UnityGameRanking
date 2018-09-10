@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Ranking
 {
@@ -40,11 +38,20 @@ namespace Ranking
             this.SaveTime = DateTime.Now;
             this.DataName = name;
         }
+
         public RankingData(UInt64 dataid, DateTime time, string name, double data)
         {
             this.DataID = dataid;
             this.ScoreValue = data;
             this.SaveTime = time;
+            this.DataName = name;
+        }
+        [JsonConstructor]
+        public RankingData(string dataid, string time, string name, string data)
+        {
+            this.DataID = UInt64.Parse(dataid);
+            this.SaveTime = DateTime.Parse(time + "0");
+            this.ScoreValue = Double.Parse(data);
             this.DataName = name;
         }
 

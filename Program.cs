@@ -12,9 +12,19 @@ namespace Ranking
     {
         static void Main(string[] args)
         {
-            var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.ASC, false);
+            var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.ASC);
             w.Init();
-            w.GetData();
+
+            List<RankingData> aa = w.GetData();
+            foreach (var s in aa)
+            {
+                Log.Debug(string.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
+                    s.DataID,
+                    s.SaveTime,
+                    s.DataName,
+                    s.ScoreValue
+                    ));
+            }
 
         }
     }
