@@ -12,20 +12,23 @@ namespace CsharpRanking
     public class RankingData
     {
         public static UInt64 GameID { private set; get; }
-
         public UInt64 DataID { private set; get; }
         public DateTime SaveTime { private set; get; }
-
         public string DataName { private set; get; }
 
-        public static ScoreType Type { private set; get; }
-        public string ScoreValue { private set; get; }
+        private static ScoreType Type { set; get; }
+        private string ScoreValue { set; get; }
 
+        /// <summary>
+        /// ランキングデータのスコアのデータ型を指定
+        /// </summary>
+        /// <param name="type">ScoreType型, スコアのデータ型</param>
         public static void SetScoreType(ScoreType type)
         {
             Type = type;
             return;
         }
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -45,8 +48,8 @@ namespace CsharpRanking
         /// <returns>true:成功, false:失敗</returns>
         public static bool SetGameID(UInt64 id)
         {
-            if (id >= 100) return false;
-            GameID = id;
+            if (id == 0) return false;
+            RankingData.GameID = id;
             return true;
         }
 
