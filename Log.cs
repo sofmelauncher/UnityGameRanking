@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 
-namespace CsharpRanking
+namespace Ranking
 {
     class Log
     {
@@ -37,7 +37,7 @@ namespace CsharpRanking
             StackTrace st = new StackTrace(1, true);
             string name = st.GetFrame(1).GetMethod().ReflectedType.FullName + "." + st.GetFrame(1).GetMethod().Name;
             string lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
-            string contents = string.Format("{0} [{1,-5}] [{2,40}() line: {3,3}] - {4}",
+            string contents = string.Format("{0} [{1,-5}] [{2,35}() line: {3,3}] - {4}",
                 GetTime,
                 level.ToString(),
                 name,
