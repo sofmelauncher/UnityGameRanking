@@ -20,6 +20,7 @@ namespace Ranking
         private static bool IsOnline { set; get; }
 
         private string BaseUrl { set; get; }
+        private static UInt64 limit = 5;
 
         private string ConfigFilePath = ConfigPath.LocalUserAppDataPath + "/config.txt";
 
@@ -43,36 +44,35 @@ namespace Ranking
                 Log.Fatal("Game ID is out of range.");
                 throw new System.ArgumentOutOfRangeException("Game ID is out of range", "gameid");
             }
+            Log.SetGameID(RankingData.GameID);
             RankingData.SetScoreType(scoreType);
             RankingManager.Oder = orderType;
             RankingManager.IsOnline = onlie;
             SQLite.SQLite.SetGameName(gameid);
+            Log.Info("Instance was created.");
         }
 
         /// <summary>
         /// 外部データベースに接続, 初期設定
         /// </summary>
         /// <returns>true:接続成功, false:接続失敗</returns>
-        public bool Init()
+        public void Init()
         {
+            Log.Info("RankingManager initialization start.");
             s.ConnectionOpen();
             s.CreateTable();
             s.ConnectionClose();
             if (this.LoadServerAddress() && RankingManager.IsOnline)
             {
-                Log.Info("【File】Success for address read.");
+                Log.Info("【SUCCESS】【File】Success for address read.");
                 RankingManager.CanOnline = true;
-                Log.Info("RankingManager Initialization success.");
-                return true;
             }
             else if (RankingManager.IsOnline)
             {
-                Log.Warn("【File】Failed to address read.");
+                Log.Warn("【FAILED】【File】Failed to address read.");
                 RankingManager.CanOnline = false;
-                Log.Warn("RankingManager Initialization Failed.");
-                return false;
             }
-            return false;
+            Log.Info("【SUCCESS】RankingManager initialization finish.");
 
         }
         /// <summary>
@@ -92,32 +92,45 @@ namespace Ranking
             }
         }
 
-        public void GetData()
+        public List<Ranking.RankingData> GetData()
         {
-            if(IsOnline && CanOnline)
+            var getlist = new List<Ranking.RankingData>();
+            if (IsOnline && CanOnline)
             {
-                this.GetOnlineData();
+                try
+                {
+                    getlist = this.GetOnlineData();
+                }catch(Exception ex)
+                {
+                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+                    RankingManager.CanOnline = false;
+                    getlist = this.GetLocalData();
+                }
             }
             else
             {
-                this.GetLocalData();
+                getlist = this.GetLocalData();
             }
+            return getlist;
         }
 
 
         /// <summary>
         /// 外部データベースからデータ取得
         /// </summary>
-        public bool GetOnlineData()
+        public List<Ranking.RankingData> GetOnlineData()
         {
+            var r = new List<Ranking.RankingData>();
+            Log.Info("【Onlie】Get Online start.");
             try
             {
                 var task = Task.Run(() =>
                 {
                     return this.SendOnlieGetData();
                 });
-                System.Console.WriteLine(task.Result);
-                return true;
+                Log.Debug(task.Result);
+                Log.Info("【SUCCESS】【Onlie】Get Online finish.");
+                return r;
             }
             catch (AggregateException ex)
             {
@@ -134,30 +147,29 @@ namespace Ranking
                     }
                     while (exNestedInnerException != null);
                 }
-                return false;
+                throw;
             }
             catch (HttpRequestException ex)
             {
                 Log.Fatal(ex.Message);
-                return false;
+                throw;
             }
             catch (System.Net.WebException ex)
             {
                 Log.Fatal(ex.Message);
-                return false;
+                throw;
             }
             catch (System.Net.Sockets.SocketException ex)
             {
                 Log.Fatal(ex.Message);
-                return false;
+                throw;
             }
-            return false;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void GetLocalData()
+        public List<Ranking.RankingData> GetLocalData()
         {
             s.ConnectionOpen();
             var list = s.SelectRecord(RankingManager.Oder);
@@ -171,6 +183,7 @@ namespace Ranking
                     s.ScoreValue
                     ));
             }
+            return list;
         }
 
         /// <summary>
@@ -179,15 +192,15 @@ namespace Ranking
         /// <param name="data"></param>
         public void SaveOnline(RankingData data)
         {
-            NameValueCollection nvc = new NameValueCollection();
-            //Console.WriteLine(this.SaveAndGetData(newdata));
+            Log.Info("【Onlie】Get Online start.");
             try
             {
                 var task = Task.Run(() =>
                 {
                     return this.SendOnlineSaveData(data);
                 });
-                System.Console.WriteLine(task.Result);
+                Log.Debug(task.Result);
+                Log.Info("【SUCCESS】【Onlie】Get Online finish.");
             }
             catch (AggregateException ex)
             {
@@ -204,20 +217,23 @@ namespace Ranking
                     }
                     while (exNestedInnerException != null);
                 }
+                throw;
             }
             catch (HttpRequestException ex)
             {
                 Log.Fatal(ex.Message);
+                throw;
             }
             catch (System.Net.WebException ex)
             {
                 Log.Fatal(ex.Message);
+                throw;
             }
             catch (System.Net.Sockets.SocketException ex)
             {
                 Log.Fatal(ex.Message);
+                throw;
             }
-            return;
         }
 
         /// <summary>
@@ -250,7 +266,7 @@ namespace Ranking
             var content = new System.Net.Http.FormUrlEncodedContent(postid);
             var client = new System.Net.Http.HttpClient();
 
-            Log.Info("【Onlie】Access to server.");
+            Log.Info("【SUCCESS】【Onlie】Access to server.");
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -262,8 +278,7 @@ namespace Ranking
         private bool LoadServerAddress()
         {
             System.IO.StreamReader sr = null;
-
-            Log.Info("【File】Access to local server address.");
+            Log.Info("【File】Access to local server address start.");
             try
             {
                 sr = System.IO.File.OpenText(ConfigFilePath);
@@ -298,6 +313,7 @@ namespace Ranking
                 Log.Warn(ex.Message);
                 return false;
             }
+            Log.Info("【SUCCESS】【File】Access to local server address finish.");
 
             this.BaseUrl = sr.ReadToEnd();
             sr.Close();
@@ -307,6 +323,8 @@ namespace Ranking
         public void SetLimit(UInt64 l)
         {
             SQLite.SQLite.SetLimit(l);
+            RankingManager.limit = l;
+            Log.Info("【SUCCESS】Set limit is" + l.ToString());
             return;
         }
     }

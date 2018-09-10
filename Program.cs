@@ -12,15 +12,8 @@ namespace Ranking
     {
         static void Main(string[] args)
         {
-            var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.DESC,false);
-            if (w.Init())
-            {
-                //w.DataSetAndLoad(1.8, "aa");
-            }
-            else
-            {
-                Log.Debug("Filed to init.");
-            }
+            var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.ASC, false);
+            w.Init();
             w.GetData();
 
         }
