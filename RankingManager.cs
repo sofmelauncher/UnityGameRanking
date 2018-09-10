@@ -58,14 +58,16 @@ namespace Ranking
             s.ConnectionClose();
             if (this.LoadServerAdress())
             {
-                Log.Info("Success for address read.");
+                Log.Info("【File】Success for address read.");
                 RankingManager.CanOnline = true;
+                Log.Info("RankingManager Initialization success.");
                 return true;
             }
             else
             {
-                Log.Info("Failed to address read.");
+                Log.Info("【File】Failed to address read.");
                 RankingManager.CanOnline = false;
+                Log.Info("RankingManager Initialization Failed.");
                 return false;
             }
 
@@ -140,9 +142,7 @@ namespace Ranking
         {
             var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
             var client = new System.Net.Http.HttpClient();
-#if DEBUG
-            Console.WriteLine(content.ReadAsStringAsync());
-#endif
+
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
