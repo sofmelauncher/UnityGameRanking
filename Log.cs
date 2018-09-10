@@ -10,7 +10,7 @@ namespace Ranking
 {
     class Log
     {
-        private static string FilePath = ConfigPath.LocalUserAppDataPath + "RankingLog.log";
+        private static string FilePath = ConfigPath.LocalUserAppDataPath + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + "RankingLog.log";
 
         public static void Fatal(string message)
         {
