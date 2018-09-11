@@ -15,18 +15,7 @@ namespace Ranking
 
         public string DataName { private set; get; }
 
-        public static ScoreType Type { private set; get; }
         public double ScoreValue { private set; get; }
-
-        /// <summary>
-        /// ランキングデータのスコアのデータ型を指定
-        /// </summary>
-        /// <param name="type">ScoreType型, スコアのデータ型</param>
-        public static void SetScoreType(ScoreType type)
-        {
-            Type = type;
-            return;
-        }
 
         /// <summary>
         /// コンストラクタ

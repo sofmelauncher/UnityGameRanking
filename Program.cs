@@ -12,7 +12,7 @@ namespace Ranking
     {
         static void Main(string[] args)
         {
-            var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.ASC);
+            var w = new RankingManager("uni",　1, OrderType.ASC);
             w.Init();
 
             List<RankingData> aa = w.GetData();

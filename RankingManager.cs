@@ -35,7 +35,7 @@ namespace Ranking
         /// <param name="scoreType">ScoreType型, スコアデータのデータ型</param>
         /// <param name="orderType">OrderType型, スコアデータのソート順</param>
         /// <param name="onlie">手動オンライン設定, デフォルト:true</param>
-        public RankingManager(string gamename, UInt64 gameid, ScoreType scoreType, OrderType orderType, bool onlie = true)
+        public RankingManager(string gamename, UInt64 gameid, OrderType orderType, bool onlie = true)
         {
             if (!RankingData.SetGameID(gameid))
             {
@@ -43,7 +43,6 @@ namespace Ranking
                 throw new System.ArgumentOutOfRangeException("Game ID is out of range", "gameid");
             }
             Log.SetGameID(RankingData.GameID);
-            RankingData.SetScoreType(scoreType);
             RankingManager.Oder = orderType;
             RankingManager.IsOnline = onlie;
             SQLite.SQLite.SetGameName(gameid);
