@@ -165,11 +165,37 @@ namespace Ranking
             return getlist;
         }
 
+        public List<Ranking.RankingData> GetAllData()
+        {
+            Log.Info("All record acquisition start.");
+            var getlist = new List<Ranking.RankingData>();
+            if (IsOnline && CanOnline)
+            {
+                try
+                {
+                    getlist = this.GetOnlineData(true);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn(ex.Message);
+                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+                    RankingManager.CanOnline = false;
+                    getlist = this.GetLocalAllData();
+                }
+            }
+            else
+            {
+                getlist = this.GetLocalAllData();
+            }
+            Log.Info("All record acquisition end.");
+            return getlist;
+        }
+
         /// <summary>
         /// オンラインデータベースにデータ取得コマンド送信
         /// </summary>
         /// <returns>取得したランキングデータ型のリスト</returns>
-        private List<Ranking.RankingData> GetOnlineData()
+        private List<Ranking.RankingData> GetOnlineData(bool isAll = false)
         {
             var r = new List<Ranking.RankingData>();
             Log.Info("【Online】Get Online start.");
@@ -177,7 +203,7 @@ namespace Ranking
             {
                 var task = Task.Run(() =>
                 {
-                    return this.SendOnlieGetData();
+                    return this.SendOnlieGetData(isAll);
                 });
                 Log.Debug("【Server】" + task.Result);
                 r = JsonConvert.DeserializeObject<List<RankingData>>(task.Result);
@@ -236,6 +262,21 @@ namespace Ranking
             var list = s.SelectRecord(RankingManager.Oder);
             s.ConnectionClose();
             foreach(var s in list)
+            {
+                Log.Debug("【Local】" + s.ToString());
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// ローカルデータベースから全ランキングデータ取得
+        /// </summary>
+        private List<Ranking.RankingData> GetLocalAllData()
+        {
+            s.ConnectionOpen();
+            var list = s.AllSelectRecord();
+            s.ConnectionClose();
+            foreach (var s in list)
             {
                 Log.Debug("【Local】" + s.ToString());
             }
@@ -332,20 +373,34 @@ namespace Ranking
         /// オンラインから非同期でランキングデータを取得するメソッド
         /// </summary>
         /// <returns>サーバーから受信したランキングデータをJSON化したもの, もしくはサーバーから返信されたエラーメッセージ</returns>
-        private async Task<string> SendOnlieGetData()
+        private async Task<string> SendOnlieGetData(bool isAll = false)
         {
+
+            string lim;
+            if(isAll)
+            {
+                lim = 0.ToString();
+            }
+            else
+            {
+                lim = RankingManager.limit.ToString();
+            }
+
             Dictionary<string, string> postid =  new Dictionary<string, string>
                     {
                         { "GameID", RankingData.GameID.ToString() },
-                        { "OrderType", RankingManager.Oder.ToString() }
+                        { "OrderType", RankingManager.Oder.ToString() },
+                        { "Limit", lim }
                     };
             var content = new System.Net.Http.FormUrlEncodedContent(postid);
             var client = new System.Net.Http.HttpClient();
 
             Log.Info("【Online】Access to server.");
             Log.Info("【Online】Address is [" + BaseUrl + GET_DATA_URL + "].");
-            Log.Info("【Online】【Transmission】Keys [" + postid.Keys.ToString() + "].");
-            Log.Info("【Online】【Transmission】Values [" + postid.Values.ToString() + "].");
+            foreach (KeyValuePair<string, string> pair in postid)
+            {
+               Log.Info("【Online】【Transmission】Contents key = [" + pair.Key + "], value = [" + pair.Value + "].");
+            }
             Log.Info("【Online】【Transmission】Contents [" + content.Headers.ContentDisposition + "].");
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Collections.Generic;
+
 
 namespace Ranking
 {
@@ -12,15 +7,15 @@ namespace Ranking
     {
         static void Main(string[] args)
         {
-            var w = new RankingManager("uni",　1, OrderType.ASC);
+            var w = new RankingManager("uni",　1, OrderType.DESC);
             w.Init();
+            w.SaveData(2, "すー");
 
             List<RankingData> aa = w.GetData();
             foreach (var s in aa)
             {
                 Log.Debug(s.ToString());
             }
-            //w.SaveData(12.1, "すー2");
 
         }
     }

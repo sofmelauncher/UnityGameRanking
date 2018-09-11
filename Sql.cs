@@ -24,7 +24,7 @@ namespace Ranking
                 "INSERT INTO @GameName (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
 
             private const string SelectCommand =
-                "SELECT * FROM @GameName ORDER BY ScoreValue {0} LIMIT {1};";
+                "SELECT * FROM @GameName ORDER BY ScoreValue {0}, SaveTime DESC LIMIT {1};";
 
             private const string AllSelectCommand =
                 "SELECT * FROM @GameName;";
