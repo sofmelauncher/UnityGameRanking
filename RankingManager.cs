@@ -184,6 +184,11 @@ namespace Ranking
                 Log.Fatal(ex.Message);
                 throw;
             }
+            catch (ArgumentException ex)
+            {
+                Log.Fatal(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -249,6 +254,10 @@ namespace Ranking
             {
                 Log.Fatal(ex.Message);
                 throw;
+            }catch(ArgumentException ex)
+            {
+                Log.Fatal(ex.Message);
+                throw;
             }
         }
 
@@ -283,14 +292,15 @@ namespace Ranking
             Dictionary<string, string> postid =  new Dictionary<string, string>
                     {
                         { "GameID", RankingData.GameID.ToString() },
-                        { "OrderType,", RankingData.Type.ToString() }
+                        { "OrderType", RankingManager.Oder.ToString() }
                     };
             var content = new System.Net.Http.FormUrlEncodedContent(postid);
             var client = new System.Net.Http.HttpClient();
 
             Log.Info("【Online】Access to server.");
             Log.Info("【Online】Address is [" + BaseUrl + GET_DATA_URL + "].");
-            Log.Info("【Online】【Transmission】Rankig DataID [" + postid.ToString() + "].");
+            Log.Info("【Online】【Transmission】Keys [" + postid.Keys.ToString() + "].");
+            Log.Info("【Online】【Transmission】Values [" + postid.Values.ToString() + "].");
             Log.Info("【Online】【Transmission】Contents [" + content.Headers.ContentDisposition + "].");
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();

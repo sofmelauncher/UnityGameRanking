@@ -15,17 +15,12 @@ namespace Ranking
             var w = new RankingManager("uni",　1, ScoreType.NUMBER, OrderType.ASC);
             w.Init();
 
-            //List<RankingData> aa = w.GetData();
-            //foreach (var s in aa)
-            //{
-            //    Log.Debug(string.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
-            //        s.DataID,
-            //        s.SaveTime,
-            //        s.DataName,
-            //        s.ScoreValue
-            //        ));
-            //}
-            w.SaveData(11.1, "すー");
+            List<RankingData> aa = w.GetData();
+            foreach (var s in aa)
+            {
+                Log.Debug(s.ToString());
+            }
+            //w.SaveData(12.1, "すー2");
 
         }
     }

@@ -48,12 +48,12 @@ namespace Ranking
             this.DataName = name;
         }
         [JsonConstructor]
-        public RankingData(string dataid, string time, string name, string data)
+        public RankingData(string dataid, string savetime, string dataname, string scorevalue)
         {
             this.DataID = UInt64.Parse(dataid);
-            this.SaveTime = DateTime.Parse(time + "0");
-            this.ScoreValue = Double.Parse(data);
-            this.DataName = name;
+            this.SaveTime = DateTime.Parse(savetime);
+            this.ScoreValue = Double.Parse(scorevalue);
+            this.DataName = dataname;
         }
 
         /// <summary>
@@ -111,7 +111,6 @@ namespace Ranking
                     DataID.GetHashCode() ^
                     SaveTime.GetHashCode() ^
                     DataName.GetHashCode() ^
-                    Type.GetHashCode() ^
                     ScoreValue.GetHashCode();
         }
 
