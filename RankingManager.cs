@@ -74,11 +74,11 @@ namespace Ranking
         }
         
         /// <summary>
-        /// 
+        /// スコア, データ名を指定してセーブ。その後データ取得。
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="dataName"></param>
-        /// <returns></returns>
+        /// <param name="data">double型:スコアデータ</param>
+        /// <param name="dataName">string型:データ名</param>
+        /// <returns>取得したランキングデータ型のリスト</returns>
         public List<Ranking.RankingData> DataSetAndLoad(double data, string dataName = "")
         {
             RankingData newdata = new RankingData(data, dataName);
@@ -88,10 +88,10 @@ namespace Ranking
         }
 
         /// <summary>
-        /// 
+        /// ランキングデータ型でセーブ。その後データ取得
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">RankingData型:セーブするランキングデータ</param>
+        /// <returns>取得したランキングデータ型のリスト</returns>
         public List<Ranking.RankingData> DataSetAndLoad(RankingData data)
         {
             this.Save(data);
@@ -99,16 +99,25 @@ namespace Ranking
             return this.GetData();
         }
 
-        public void SaveData(RankingData data)
-        {
-            this.Save(data);
-        }
-
+        /// <summary>
+        /// スコア, データ名を指定してセーブ。
+        /// </summary>
+        /// <param name="data">double型:スコアデータ</param>
+        /// <param name="dataName">string型:データ名</param>
         public void SaveData(double data, string dataName = "")
         {
             RankingData newdata = new RankingData(data, dataName);
             this.Save(newdata);
             return;
+        }
+
+        /// <summary>
+        /// ランキングデータ型でセーブ。
+        /// </summary>
+        /// <param name="data">RankingData型:セーブするランキングデータ</param>
+        public void SaveData(RankingData data)
+        {
+            this.Save(data);
         }
         private void Save(RankingData data)
         {
@@ -128,7 +137,10 @@ namespace Ranking
             }
         }
 
-
+        /// <summary>
+        /// ランキングデータ取得。オンラインに失敗した場合オフラインモードに移行。
+        /// </summary>
+        /// <returns>取得したランキングデータ型のリスト</returns>
         public List<Ranking.RankingData> GetData()
         {
             var getlist = new List<Ranking.RankingData>();
@@ -153,11 +165,11 @@ namespace Ranking
             return getlist;
         }
 
-
         /// <summary>
-        /// 外部データベースからデータ取得
+        /// オンラインデータベースにデータ取得コマンド送信
         /// </summary>
-        public List<Ranking.RankingData> GetOnlineData()
+        /// <returns>取得したランキングデータ型のリスト</returns>
+        private List<Ranking.RankingData> GetOnlineData()
         {
             var r = new List<Ranking.RankingData>();
             Log.Info("【Online】Get Online start.");
@@ -216,9 +228,9 @@ namespace Ranking
         }
 
         /// <summary>
-        /// 
+        /// ローカルデータベースからランキングデータ取得
         /// </summary>
-        public List<Ranking.RankingData> GetLocalData()
+        private List<Ranking.RankingData> GetLocalData()
         {
             s.ConnectionOpen();
             var list = s.SelectRecord(RankingManager.Oder);
@@ -231,10 +243,10 @@ namespace Ranking
         }
 
         /// <summary>
-        /// 
+        /// オンラインデータベースにデータ送信
         /// </summary>
-        /// <param name="data"></param>
-        public void SaveOnline(RankingData data)
+        /// <param name="data">RankingData型:送信するランキングデータ</param>
+        private void SaveOnline(RankingData data)
         {
 
             Log.Info("【Online】Save Online start.");
@@ -286,10 +298,10 @@ namespace Ranking
         }
 
         /// <summary>
-        /// 
+        /// ローカルデータベースに取得
         /// </summary>
         /// <param name="newdata"></param>
-        public void SaveLocal(RankingData newdata)
+        private void SaveLocal(RankingData newdata)
         {
             Log.Info("【Online】Save local start.");
             s.ConnectionOpen();
@@ -298,6 +310,11 @@ namespace Ranking
             Log.Info("【Success】Successful Local.");
         }
 
+        /// <summary>
+        /// オンラインに非同期でセーブコマンドを送信するメソッド
+        /// </summary>
+        /// <param name="data">RankigData型:送信するランキングデータ</param>
+        /// <returns>実行したSQLコマンド, もしくはサーバーから返信されたエラーメッセージ</returns>
         private async Task<string> SendOnlineSaveData(RankingData data)
         {
             var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
@@ -311,6 +328,10 @@ namespace Ranking
             return await response.Content.ReadAsStringAsync();
         }
 
+        /// <summary>
+        /// オンラインから非同期でランキングデータを取得するメソッド
+        /// </summary>
+        /// <returns>サーバーから受信したランキングデータをJSON化したもの, もしくはサーバーから返信されたエラーメッセージ</returns>
         private async Task<string> SendOnlieGetData()
         {
             Dictionary<string, string> postid =  new Dictionary<string, string>
@@ -379,6 +400,11 @@ namespace Ranking
             return true;
         }
 
+        /// <summary>
+        /// 取得するデータの個数
+        /// default = 5
+        /// </summary>
+        /// <param name="l">取得するデータ個数</param>
         public void SetLimit(UInt64 l)
         {
             SQLite.SQLite.SetLimit(l);
