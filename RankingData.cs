@@ -68,18 +68,6 @@ namespace Ranking
         }
 
         /// <summary>
-        /// スコアデータをTimeSpan型で取得
-        /// </summary>
-        public TimeSpan ToTime
-        {
-            get {
-                long t = long.Parse(ScoreValue.ToString());
-                TimeSpan ts = new TimeSpan(t);
-                return ts;
-            }
-        }
-
-        /// <summary>
         /// POST用のランキングデータを辞書化して取得する
         /// </summary>
         /// <returns>連想配列型(辞書)のスコアデータ</returns>
@@ -94,6 +82,7 @@ namespace Ranking
                     { "SaveTime", this.SaveTime.ToString("yyyy-MM-dd HH:mm:ss") }
                 };
         }
+
         public override int GetHashCode()
         {
             return GameID.GetHashCode() ^
@@ -112,6 +101,7 @@ namespace Ranking
                     this.SaveTime == other.SaveTime &&
                     this.ScoreValue == other.ScoreValue;
         }
+
         public bool Equals(RankingData other)
         {
             if (other == null) return false;

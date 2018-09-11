@@ -36,18 +36,27 @@ namespace Ranking
         {
             //yyyy-MM-dd HH:mm:ss [xxxxx][yyy][xxxxx.xxxxx line: xxx] - xxx
 
-            StackTrace st = new StackTrace(1, true);
-            string name = st.GetFrame(1).GetMethod().ReflectedType.FullName + "." + st.GetFrame(1).GetMethod().Name;
-            string lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
-            string contents = string.Format("{0} [{1,-5}] [{2,2}] [{3,40}() line: {4,3}] - {5}",
+            //デバッグモード
+            //StackTrace st = new StackTrace(1, true);
+            //string name = st.GetFrame(1).GetMethod().ReflectedType.FullName + "." + st.GetFrame(1).GetMethod().Name;
+            //string lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
+            //string contents = string.Format("{0} [{1,-5}] [{2,2}] [{3,40}() line: {4,3}] - {5}",
+            //    GetTime,
+            //    level.ToString(),
+            //    Log.GameID,
+            //    name,
+            //    lineNumber,
+            //    msg
+            //);
+            //Console.WriteLine(contents);
+
+            //リリースモード
+            string contents = string.Format("{0} [{1,-5}] [{2,2}] - {3}",
                 GetTime,
                 level.ToString(),
                 Log.GameID,
-                name,
-                lineNumber,
                 msg
             );
-            Console.WriteLine(contents);
             try
             {
                 using (StreamWriter sw = new StreamWriter(FilePath, true, Encoding.UTF8))

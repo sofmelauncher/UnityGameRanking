@@ -22,17 +22,17 @@ namespace Ranking
 
         private string ConfigFilePath = ConfigPath.LocalUserAppDataPath + "/config.txt";
 
-        private const string GET_DATA_URL  = "/ranking/GetData.php";
+        private const string GET_DATA_URL = "/ranking/GetData.php";
         private const string SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = new SQLite.SQLite();
+        public readonly string Version = "1.0.0.0";
 
         /// <summary>
         /// コンストラクタ, ランキングマネージャーの初期設定
         /// </summary>
         /// <param name="gamename">ゲーム名を指定</param>
         /// <param name="gameid">ゲームのID</param>
-        /// <param name="scoreType">ScoreType型, スコアデータのデータ型</param>
         /// <param name="orderType">OrderType型, スコアデータのソート順</param>
         /// <param name="onlie">手動オンライン設定, デフォルト:true</param>
         public RankingManager(string gamename, UInt64 gameid, OrderType orderType, bool onlie = true)

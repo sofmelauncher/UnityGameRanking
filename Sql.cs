@@ -48,7 +48,7 @@ namespace Ranking
                 }
                 catch (InvalidOperationException ex)
                 {
-
+                    Ranking.Log.Fatal(ex.Message);
                 }
                 catch (System.Data.SqlClient.SqlException ex)
                 {
