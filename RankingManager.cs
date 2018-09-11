@@ -136,7 +136,7 @@ namespace Ranking
         public List<Ranking.RankingData> GetOnlineData()
         {
             var r = new List<Ranking.RankingData>();
-            Log.Info("【Onlie】Get Online start.");
+            Log.Info("【Online】Get Online start.");
             try
             {
                 var task = Task.Run(() =>
@@ -149,7 +149,7 @@ namespace Ranking
                 {
                     Log.Debug("【Online】" + s.ToString());
                 }
-                Log.Info("【Success】【Onlie】Get Online Success.");
+                Log.Info("【Success】【Online】Get Online Success.");
                 return r;
             }
             catch (AggregateException ex)
@@ -208,7 +208,7 @@ namespace Ranking
         public void SaveOnline(RankingData data)
         {
 
-            Log.Info("【Onlie】Save Online start.");
+            Log.Info("【Online】Save Online start.");
             try
             {
                 var task = Task.Run(() =>
@@ -216,7 +216,7 @@ namespace Ranking
                     return this.SendOnlineSaveData(data);
                 });
                 Log.Debug(task.Result);
-                Log.Info("【Success】【Onlie】Save Online Success.");
+                Log.Info("【Success】【Online】Save Online Success.");
             }
             catch (AggregateException ex)
             {
