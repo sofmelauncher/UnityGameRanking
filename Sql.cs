@@ -58,7 +58,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【SUCCESS】【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
+                Ranking.Log.Info("【Success】【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
                 return;
             }
 
@@ -90,7 +90,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【SUCCESS】【SQL】Created of [" + TableName + "] table.");
+                Ranking.Log.Info("【Success】【SQL】Created of [" + TableName + "] table.");
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace Ranking
             /// </summary>
             public void InsertRecord(Ranking.RankingData data)
             {
-
+                Ranking.Log.Info("【SQL】Ranking Data [" + data.ToString() + "].");
                 SQLiteCommand command = _conn.CreateCommand();
                 command.CommandText = GameIDINCommand(InsertCommand);
 
@@ -140,7 +140,7 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                 }
 
-                Ranking.Log.Info("【SUCCESS】【SQL】Execute [" + command.CommandText + "].");
+                Ranking.Log.Info("【Success】【SQL】Execute [" + command.CommandText + "].");
                 Ranking.Log.Info("【SQL】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
                 Ranking.Log.Info("【SQL】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
                 Ranking.Log.Info("【SQL】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
@@ -177,7 +177,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【SUCCESS】【SQL】Executed [" + command.CommandText + "].");
+                Ranking.Log.Info("【Success】【SQL】Executed [" + command.CommandText + "].");
 
 
                 var list = new List<Ranking.RankingData>();
@@ -220,7 +220,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【SUCCESS】【SQL】Exexuted [" + command.CommandText + "].");
+                Ranking.Log.Info("【Success】【SQL】Exexuted [" + command.CommandText + "].");
 
                 var list = new List<Ranking.RankingData>();
 
@@ -239,7 +239,7 @@ namespace Ranking
             public void ConnectionClose()
             {
                 _conn.Close();
-                Ranking.Log.Info("【SUCCESS】【SQL】Data base close.");
+                Ranking.Log.Info("【Success】【SQL】Data base close.");
                 return;
             }
 
@@ -249,7 +249,7 @@ namespace Ranking
             public static void SetGameName(UInt64 id)
             {
                 SQLite.GameID = id;
-                Log.Info("【SUCCESS】【SQL】Set GameID is" + SQLite.GameID.ToString());
+                Log.Info("【Success】【SQL】Set GameID is" + SQLite.GameID.ToString());
             }
 
             private void ConsoleWriteData(SQLiteDataReader data)

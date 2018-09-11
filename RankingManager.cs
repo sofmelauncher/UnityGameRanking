@@ -62,7 +62,7 @@ namespace Ranking
             s.ConnectionClose();
             if (this.LoadServerAddress() && RankingManager.IsOnline)
             {
-                Log.Info("【SUCCESS】【File】Success for address read.");
+                Log.Info("【Success】【File】Success for address read.");
                 RankingManager.CanOnline = true;
             }
             else if (RankingManager.IsOnline)
@@ -70,7 +70,7 @@ namespace Ranking
                 Log.Warn("【FAILED】【File】Failed to address read.");
                 RankingManager.CanOnline = false;
             }
-            Log.Info("【SUCCESS】RankingManager initialization finish.");
+            Log.Info("【Success】RankingManager initialization finish.");
 
         }
         /// <summary>
@@ -143,18 +143,13 @@ namespace Ranking
                 {
                     return this.SendOnlieGetData();
                 });
-                Log.Debug(task.Result);
+                Log.Debug("【Server】" + task.Result);
                 r = JsonConvert.DeserializeObject<List<RankingData>>(task.Result);
                 foreach (var s in r)
                 {
-                    Log.Debug(string.Format("【Onlice】ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
-                        s.DataID,
-                        s.SaveTime,
-                        s.DataName,
-                        s.ScoreValue
-                        ));
+                    Log.Debug("【Online】" + s.ToString());
                 }
-                Log.Info("【SUCCESS】【Onlie】Get Online success.");
+                Log.Info("【Success】【Onlie】Get Online Success.");
                 return r;
             }
             catch (AggregateException ex)
@@ -201,12 +196,7 @@ namespace Ranking
             s.ConnectionClose();
             foreach(var s in list)
             {
-                Log.Debug(string.Format("【Local】ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
-                    s.DataID,
-                    s.SaveTime,
-                    s.DataName,
-                    s.ScoreValue
-                    ));
+                Log.Debug("【Local】" + s.ToString());
             }
             return list;
         }
@@ -226,7 +216,7 @@ namespace Ranking
                     return this.SendOnlineSaveData(data);
                 });
                 Log.Debug(task.Result);
-                Log.Info("【SUCCESS】【Onlie】Save Online success.");
+                Log.Info("【Success】【Onlie】Save Online Success.");
             }
             catch (AggregateException ex)
             {
@@ -268,11 +258,11 @@ namespace Ranking
         /// <param name="newdata"></param>
         public void SaveLocal(RankingData newdata)
         {
-            Log.Info("【Onlie】Save local start.");
+            Log.Info("【Online】Save local start.");
             s.ConnectionOpen();
             s.InsertRecord(newdata);
             s.ConnectionClose();
-            Log.Info("【SUCCESS】Successful Local.");
+            Log.Info("【Success】Successful Local.");
         }
 
         private async Task<string> SendOnlineSaveData(RankingData data)
@@ -280,8 +270,10 @@ namespace Ranking
             var content = new System.Net.Http.FormUrlEncodedContent(data.Dictionary());
             var client = new System.Net.Http.HttpClient();
 
-            Log.Info("【Onlie】Access to server.");
-            Log.Info("【Onlie】Address is [" + BaseUrl + SAVE_DATA_URL + "].");
+            Log.Info("【Online】Access to server.");
+            Log.Info("【Online】Address is [" + BaseUrl + SAVE_DATA_URL + "].");
+            Log.Info("【Online】【Transmission】Ranking Data [" + data.ToString() + "].");
+            Log.Info("【Online】【Transmission】Contents [" + content.ToString() + "].");
             var response = await client.PostAsync(BaseUrl + SAVE_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -290,13 +282,16 @@ namespace Ranking
         {
             Dictionary<string, string> postid =  new Dictionary<string, string>
                     {
-                        { "GameID", RankingData.GameID.ToString() }
+                        { "GameID", RankingData.GameID.ToString() },
+                        { "OrderType,", RankingData.Type.ToString() }
                     };
             var content = new System.Net.Http.FormUrlEncodedContent(postid);
             var client = new System.Net.Http.HttpClient();
 
-            Log.Info("【Onlie】Access to server.");
-            Log.Info("【Onlie】Address is [" + BaseUrl + GET_DATA_URL + "].");
+            Log.Info("【Online】Access to server.");
+            Log.Info("【Online】Address is [" + BaseUrl + GET_DATA_URL + "].");
+            Log.Info("【Online】【Transmission】Rankig DataID [" + postid.ToString() + "].");
+            Log.Info("【Online】【Transmission】Contents [" + content.Headers.ContentDisposition + "].");
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -343,7 +338,7 @@ namespace Ranking
                 Log.Warn(ex.Message);
                 return false;
             }
-            Log.Info("【SUCCESS】【File】Access to local server address finish.");
+            Log.Info("【Success】【File】Access to local server address finish.");
 
             this.BaseUrl = sr.ReadToEnd();
             sr.Close();
@@ -354,7 +349,7 @@ namespace Ranking
         {
             SQLite.SQLite.SetLimit(l);
             RankingManager.limit = l;
-            Log.Info("【SUCCESS】Set limit is " + l.ToString());
+            Log.Info("【Success】Set limit is " + l.ToString());
             return;
         }
     }

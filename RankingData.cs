@@ -12,9 +12,10 @@ namespace Ranking
         public static UInt64 GameID { private set; get; }
         public UInt64 DataID { private set; get; }
         public DateTime SaveTime { private set; get; }
+
         public string DataName { private set; get; }
 
-        private static ScoreType Type { set; get; }
+        public static ScoreType Type { private set; get; }
         public double ScoreValue { private set; get; }
 
         /// <summary>
@@ -100,11 +101,10 @@ namespace Ranking
                     { "GameID", RankingData.GameID.ToString() },
                     { "DataID", "0" },
                     { "DataName", this.DataName },
-                    { "Score", this.ScoreValue.ToString() },
-                    { "Time", this.SaveTime.ToString("yyyy-MM-dd HH:mm:ss") }
+                    { "ScoreValue", this.ScoreValue.ToString() },
+                    { "SaveTime", this.SaveTime.ToString("yyyy-MM-dd HH:mm:ss") }
                 };
         }
-
         public override int GetHashCode()
         {
             return GameID.GetHashCode() ^
@@ -128,6 +128,17 @@ namespace Ranking
         {
             if (other == null) return false;
             return (this.DataID.Equals(other.DataID));
+        }
+
+        public override string ToString()
+        {
+            return string.Format("GameID = {0,2}, Time = {1,10}, DataID = {2,2}, Name = {3}, Score = {4,5:#.###}",
+                            RankingData.GameID.ToString(),
+                            this.SaveTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                            this.DataID.ToString(),
+                            this.DataName,
+                            this.ScoreValue
+                        );
         }
 
     }

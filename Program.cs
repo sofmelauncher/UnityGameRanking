@@ -25,7 +25,7 @@ namespace Ranking
             //        s.ScoreValue
             //        ));
             //}
-            w.SaveData(1.4949, "jdwoj");
+            w.SaveData(11.1, "すー");
 
         }
     }
