@@ -72,36 +72,59 @@ namespace Ranking
             Log.Info("【Success】RankingManager initialization finish.");
 
         }
+        
         /// <summary>
-        /// 新規データをセットして最新ランキングを取得
+        /// 
         /// </summary>
-        public void DataSetAndLoad(double data, string dataName = "")
+        /// <param name="data"></param>
+        /// <param name="dataName"></param>
+        /// <returns></returns>
+        public List<Ranking.RankingData> DataSetAndLoad(double data, string dataName = "")
         {
             RankingData newdata = new RankingData(data, dataName);
-            SaveLocal(newdata);
+            this.Save(newdata);
 
-            if (IsOnline && CanOnline)
-            {
-                SaveOnline(newdata);
-                GetOnlineData();
-            }
+            return this.GetData();
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<Ranking.RankingData> DataSetAndLoad(RankingData data)
+        {
+            this.Save(data);
+
+            return this.GetData();
+        }
+
         public void SaveData(RankingData data)
+        {
+            this.Save(data);
+        }
+
+        public void SaveData(double data, string dataName = "")
+        {
+            RankingData newdata = new RankingData(data, dataName);
+            this.Save(newdata);
+            return;
+        }
+        private void Save(RankingData data)
         {
             SaveLocal(data);
             if (IsOnline && CanOnline)
             {
-                SaveOnline(data);
-            }
-        }
-        public void SaveData(double data, string dataName = "")
-        {
-            RankingData newdata = new RankingData(data, dataName);
-            SaveLocal(newdata);
-            if (IsOnline && CanOnline)
-            {
-                SaveOnline(newdata);
+                try
+                {
+                    SaveOnline(data);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn(ex.Message);
+                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+                    RankingManager.CanOnline = false;
+                }
             }
         }
 
@@ -111,15 +134,17 @@ namespace Ranking
             var getlist = new List<Ranking.RankingData>();
             if (IsOnline && CanOnline)
             {
-                //try
-                //{
+                try
+                {
                     getlist = this.GetOnlineData();
-                //}catch(Exception ex)
-                //{
-                //    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
-                //    RankingManager.CanOnline = false;
-                //    getlist = this.GetLocalData();
-                //}
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn(ex.Message);
+                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+                    RankingManager.CanOnline = false;
+                    getlist = this.GetLocalData();
+                }
             }
             else
             {
