@@ -26,7 +26,7 @@ namespace Ranking
         private const string SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly string Version = "1.2.4.0";
+        public readonly string Version = "2.0.0.0";
 
         /// <summary>
         /// ログパス
@@ -69,6 +69,7 @@ namespace Ranking
         /// <returns>true:接続成功, false:接続失敗</returns>
         public void Init()
         {
+            bool success = false;
             s = new SQLite.SQLite();
             Log.Info("RankingManager initialization start.");
             s.ConnectionOpen();
@@ -78,20 +79,26 @@ namespace Ranking
             {
                 Log.Info("【Success】【File】Success for address read.");
                 RankingManager.CanOnline = true;
+
                 Log.Info("【Diff】Check Diff DataBase.");
                 s.ConnectionOpen();
-                if (s.IsDiffDBIseet())
+                List<Ranking.RankingData> data = null;
+                data = s.DiffAllSelectRecord();
+                Log.Info("【Diff】diff database count = [" + data.Count.ToString() + "].");
+                if (data.Count != 0)
                 {
                     Log.Info("【Diff】diff database is exist.");
                     Log.Info("【Diff】diff database start transmission.");
 
-                    var data = s.DiffAllSelectRecord();
                     foreach (var d in data)
                     {
-                        this.SaveOnline(d);
+                        success = this.SaveOnline(d);
                     }
                     Log.Info("【Success】【Diff】diff database transmission.");
-                    s.DiffAllDelete();
+                    if (success)
+                    {
+                        s.DiffAllDelete();
+                    }
                 }
                 else
                 {
@@ -156,40 +163,10 @@ namespace Ranking
         private void Save(RankingData data)
         {
             SaveLocal(data);
+            bool success = false;
             if (IsOnline && CanOnline)
             {
-                try
-                {
-                    SaveOnline(data);
-                }
-                catch(AggregateException ex)
-                {
-                    Log.Warn(ex.Message);
-                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
-
-                    Log.Info("【Diff】Local diff save start.");
-                    s.ConnectionOpen();
-                    s.DiffInsertRecord(data);
-                    s.ConnectionClose();
-                    Log.Info("【Success】【Diff】Successful Local diff save.");
-
-                    RankingManager.CanOnline = false;
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Warn(ex.Message);
-                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
-
-                    Log.Info("【Diff】Local diff save start.");
-                    s.ConnectionOpen();
-                    s.DiffInsertRecord(data);
-                    s.ConnectionClose();
-                    Log.Info("【Success】【Diff】Successful Local diff save.");
-
-                    RankingManager.CanOnline = false;
-                    return;
-                }
+                success =  SaveOnline(data);
             }
             else if (IsOnline && !CanOnline)
             {
@@ -198,6 +175,19 @@ namespace Ranking
                 s.DiffInsertRecord(data);
                 s.ConnectionClose();
                 Log.Info("【Success】【Diff】Successful Local diff save.");
+            }
+
+            if (!success)
+            {
+                Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+
+                Log.Info("【Diff】Local diff save start.");
+                s.ConnectionOpen();
+                s.DiffInsertRecord(data);
+                s.ConnectionClose();
+                Log.Info("【Success】【Diff】Successful Local diff save.");
+
+                RankingManager.CanOnline = false;
             }
 
         }
@@ -357,7 +347,8 @@ namespace Ranking
         /// オンラインデータベースにデータ送信
         /// </summary>
         /// <param name="data">RankingData型:送信するランキングデータ</param>
-        private void SaveOnline(RankingData data)
+        /// <returns>true:送信成功, false:送信失敗</returns>
+        private bool SaveOnline(RankingData data)
         {
 
             Log.Info("【Online】Save Online start.");
@@ -369,6 +360,7 @@ namespace Ranking
                 });
                 Log.Debug(task.Result);
                 Log.Info("【Success】【Online】Save Online Success.");
+                return true;
             }
             catch (AggregateException ex)
             {
@@ -385,26 +377,27 @@ namespace Ranking
                     }
                     while (exNestedInnerException != null);
                 }
-                throw;
+                return false;
             }
             catch (HttpRequestException ex)
             {
                 Log.Fatal(ex.Message);
-                throw;
+                return false;
             }
             catch (System.Net.WebException ex)
             {
                 Log.Fatal(ex.Message);
-                throw;
+                return false;
             }
             catch (System.Net.Sockets.SocketException ex)
             {
                 Log.Fatal(ex.Message);
-                throw;
-            }catch(ArgumentException ex)
+                return false;
+            }
+            catch(ArgumentException ex)
             {
                 Log.Fatal(ex.Message);
-                throw;
+                return false;
             }
         }
 

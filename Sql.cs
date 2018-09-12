@@ -42,8 +42,6 @@ namespace Ranking
             private const string DiffAllSelectCommand =
                 "SELECT * FROM @GameNamediff;";
 
-            private const string DiffCheckCommand = "SELECT * FROM @GameNamediff LIMIT 1;";
-
             private const string DiffAllDeleteCommand = "DELETE FROM @GameNamediff;";
 
             public static void SetLimit(UInt64 l)
@@ -67,18 +65,22 @@ namespace Ranking
                 catch (InvalidOperationException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.Data.SqlClient.SqlException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.Configuration.ConfigurationException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (SQLiteException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 Ranking.Log.Info("【Open】【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
                 return;
@@ -106,22 +108,27 @@ namespace Ranking
                 catch (InvalidCastException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.Data.SqlClient.SqlException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.IO.IOException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (InvalidOperationException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (SQLiteException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 Ranking.Log.Info("【Success】【SQL】Created of [" + TableName + "] table.");
                 Ranking.Log.Info("【Success】【SQL】Created of [" + TableName + "diff] table.");
@@ -162,21 +169,27 @@ namespace Ranking
                 catch (InvalidCastException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.Data.SqlClient.SqlException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.IO.IOException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (InvalidOperationException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
-                }catch(SQLiteException ex)
+                    return;
+                }
+                catch(SQLiteException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
 
 
@@ -221,22 +234,27 @@ namespace Ranking
                 catch (InvalidCastException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.Data.SqlClient.SqlException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (System.IO.IOException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (InvalidOperationException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
                 catch (SQLiteException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                    return;
                 }
         Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
                 Ranking.Log.Info("【SQL】【Diff】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
@@ -392,54 +410,6 @@ namespace Ranking
                 return list;
             }
             
-            /// <summary>
-            /// Diffデータベースにデータが存在するかどうか
-            /// </summary>
-            /// <returns>true:存在する, false:存在しない</returns>
-            public bool IsDiffDBIseet()
-            {
-                SQLiteCommand command = _conn.CreateCommand();
-                command.CommandText = GameIDINCommand(DiffCheckCommand);
-                Ranking.Log.Info("【SQL】【Diff】Exexute [" + command.CommandText + "].");
-                SQLiteDataReader reader = null;
-
-                try
-                {
-                    reader = command.ExecuteReader();
-                }
-                catch (InvalidCastException ex)
-                {
-                    Ranking.Log.Fatal(ex.Message);
-                }
-                catch (System.Data.SqlClient.SqlException ex)
-                {
-                    Ranking.Log.Fatal(ex.Message);
-                }
-                catch (System.IO.IOException ex)
-                {
-                    Ranking.Log.Fatal(ex.Message);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Ranking.Log.Fatal(ex.Message);
-                }
-                catch (SQLiteException ex)
-                {
-                    Ranking.Log.Fatal(ex.Message);
-                }
-
-                Ranking.Log.Info("【Success】【SQL】【Diff】Exexuted [" + command.CommandText + "].");
-
-                if (reader.HasRows)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
             public void DiffAllDelete()
             {
                 SQLiteCommand command = _conn.CreateCommand();
