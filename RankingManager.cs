@@ -79,14 +79,16 @@ namespace Ranking
                 Log.Info("【Success】【File】Success for address read.");
                 RankingManager.CanOnline = true;
                 Log.Info("【Diff】Check Diff DataBase.");
+                s.ConnectionOpen();
                 if (s.IsDiffDBIseet())
                 {
                     Log.Info("【Diff】diff database is exist.");
                     Log.Info("【Diff】diff database start transmission.");
+
                     var data = s.DiffAllSelectRecord();
-                    foreach (var e in data)
+                    foreach (var d in data)
                     {
-                        this.SaveData(e);
+                        this.SaveOnline(d);
                     }
                     Log.Info("【Success】【Diff】diff database transmission.");
                     s.DiffAllDelete();
@@ -95,6 +97,7 @@ namespace Ranking
                 {
                     Log.Info("【Diff】diff database is not exist.");
                 }
+                s.ConnectionClose();
             }
             else if (RankingManager.IsOnline)
             {
@@ -159,6 +162,20 @@ namespace Ranking
                 {
                     SaveOnline(data);
                 }
+                catch(AggregateException ex)
+                {
+                    Log.Warn(ex.Message);
+                    Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+
+                    Log.Info("【Diff】Local diff save start.");
+                    s.ConnectionOpen();
+                    s.DiffInsertRecord(data);
+                    s.ConnectionClose();
+                    Log.Info("【Success】【Diff】Successful Local diff save.");
+
+                    RankingManager.CanOnline = false;
+                    return;
+                }
                 catch (Exception ex)
                 {
                     Log.Warn(ex.Message);
@@ -171,9 +188,10 @@ namespace Ranking
                     Log.Info("【Success】【Diff】Successful Local diff save.");
 
                     RankingManager.CanOnline = false;
+                    return;
                 }
             }
-            if (IsOnline)
+            else if (IsOnline && !CanOnline)
             {
                 Log.Info("【Diff】Local diff save start.");
                 s.ConnectionOpen();

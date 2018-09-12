@@ -76,7 +76,11 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【Success】【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
+                catch (SQLiteException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
+                Ranking.Log.Info("【Open】【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
                 return;
             }
 
@@ -112,6 +116,10 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                 }
                 catch (InvalidOperationException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
+                catch (SQLiteException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
@@ -166,7 +174,12 @@ namespace Ranking
                 catch (InvalidOperationException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
+                }catch(SQLiteException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
                 }
+
+
                 Ranking.Log.Info("【Success】【SQL】Executed [" + command.CommandText + "].");
                 Ranking.Log.Info("【SQL】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
                 Ranking.Log.Info("【SQL】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
@@ -186,7 +199,7 @@ namespace Ranking
 
                 SQLiteParameter SaveTime = command.CreateParameter();
                 SaveTime.ParameterName = "@1";
-                SaveTime.Value = data.SaveTime.ToString("yyyy - MM - dd HH: mm:ss");
+                SaveTime.Value = data.SaveTime;
 
                 SQLiteParameter DataName = command.CreateParameter();
                 DataName.ParameterName = "@2";
@@ -221,7 +234,11 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
+                catch (SQLiteException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
+        Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
                 Ranking.Log.Info("【SQL】【Diff】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
                 Ranking.Log.Info("【SQL】【Diff】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
                 Ranking.Log.Info("【SQL】【Diff】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
@@ -256,6 +273,10 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                 }
                 catch (InvalidOperationException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
+                catch (SQLiteException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
@@ -303,6 +324,10 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
+                catch (SQLiteException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
                 Ranking.Log.Info("【Success】【SQL】Exexuted [" + command.CommandText + "].");
 
                 var list = new List<Ranking.RankingData>();
@@ -345,6 +370,10 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                 }
                 catch (InvalidOperationException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
+                catch (SQLiteException ex)
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
@@ -394,9 +423,14 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
+                catch (SQLiteException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
+
                 Ranking.Log.Info("【Success】【SQL】【Diff】Exexuted [" + command.CommandText + "].");
 
-                if (reader != null)
+                if (reader.HasRows)
                 {
                     return true;
                 }
@@ -432,6 +466,10 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
+                catch (SQLiteException ex)
+                {
+                    Ranking.Log.Fatal(ex.Message);
+                }
                 Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
                 return;
             }
@@ -442,7 +480,7 @@ namespace Ranking
             public void ConnectionClose()
             {
                 _conn.Close();
-                Ranking.Log.Info("【Success】【SQL】Data base close.");
+                Ranking.Log.Info("【Close】【SQL】Data base close.");
                 return;
             }
 
