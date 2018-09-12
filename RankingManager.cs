@@ -26,7 +26,7 @@ namespace Ranking
         private const string SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly string Version = "2.0.0.0";
+        public readonly string Version = "2.1.0.0";
 
         /// <summary>
         /// ログパス
@@ -50,6 +50,7 @@ namespace Ranking
         {
             Log.Info("【Start】------------------------------------------------------------------------------------------" +
                 "------------------------------------------------------------------------------------------");
+            Log.Info("Version = [" + this.Version + "].");
             if (!RankingData.SetGameID(gameid))
             {
                 Log.Fatal("Game ID is out of range.");
