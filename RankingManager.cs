@@ -20,13 +20,24 @@ namespace Ranking
         private string BaseUrl { set; get; }
         private static UInt64 limit = 5;
 
-        private string ConfigFilePath = ConfigPath.LocalUserAppDataPath + "/config.txt";
+        private string ConfigFilePath = Path.LocalPath + "/config.txt";
 
         private const string GET_DATA_URL = "/ranking/GetData.php";
         private const string SAVE_DATA_URL = "/ranking/SaveData.php";
 
-        SQLite.SQLite s = new SQLite.SQLite();
-        public readonly string Version = "1.0.0.0";
+        SQLite.SQLite s = null;
+        public readonly string Version = "1.2.4.0";
+
+        /// <summary>
+        /// ログパス
+        /// </summary>
+        /// <returns>ログのパス</returns>
+        public string GetLogPath
+        {
+            get {
+                return Log.GetFilePath;
+            }
+        }
 
         /// <summary>
         /// コンストラクタ, ランキングマネージャーの初期設定
@@ -37,6 +48,8 @@ namespace Ranking
         /// <param name="onlie">手動オンライン設定, デフォルト:true</param>
         public RankingManager(string gamename, UInt64 gameid, OrderType orderType, bool onlie = true)
         {
+            Log.Info("【Start】------------------------------------------------------------------------------------------" +
+                "------------------------------------------------------------------------------------------");
             if (!RankingData.SetGameID(gameid))
             {
                 Log.Fatal("Game ID is out of range.");
@@ -47,6 +60,7 @@ namespace Ranking
             RankingManager.IsOnline = onlie;
             SQLite.SQLite.SetGameName(gameid);
             Log.Info("Instance was created.");
+
         }
 
         /// <summary>
@@ -55,6 +69,7 @@ namespace Ranking
         /// <returns>true:接続成功, false:接続失敗</returns>
         public void Init()
         {
+            s = new SQLite.SQLite();
             Log.Info("RankingManager initialization start.");
             s.ConnectionOpen();
             s.CreateTable();
@@ -63,6 +78,23 @@ namespace Ranking
             {
                 Log.Info("【Success】【File】Success for address read.");
                 RankingManager.CanOnline = true;
+                Log.Info("【Diff】Check Diff DataBase.");
+                if (s.IsDiffDBIseet())
+                {
+                    Log.Info("【Diff】diff database is exist.");
+                    Log.Info("【Diff】diff database start transmission.");
+                    var data = s.DiffAllSelectRecord();
+                    foreach (var e in data)
+                    {
+                        this.SaveData(e);
+                    }
+                    Log.Info("【Success】【Diff】diff database transmission.");
+                    s.DiffAllDelete();
+                }
+                else
+                {
+                    Log.Info("【Diff】diff database is not exist.");
+                }
             }
             else if (RankingManager.IsOnline)
             {
@@ -70,7 +102,6 @@ namespace Ranking
                 RankingManager.CanOnline = false;
             }
             Log.Info("【Success】RankingManager initialization finish.");
-
         }
         
         /// <summary>
@@ -132,9 +163,25 @@ namespace Ranking
                 {
                     Log.Warn(ex.Message);
                     Log.Warn("【FAILED】【Online】Connection to server failed. Change to offline.");
+
+                    Log.Info("【Diff】Local diff save start.");
+                    s.ConnectionOpen();
+                    s.DiffInsertRecord(data);
+                    s.ConnectionClose();
+                    Log.Info("【Success】【Diff】Successful Local diff save.");
+
                     RankingManager.CanOnline = false;
                 }
             }
+            if (IsOnline)
+            {
+                Log.Info("【Diff】Local diff save start.");
+                s.ConnectionOpen();
+                s.DiffInsertRecord(data);
+                s.ConnectionClose();
+                Log.Info("【Success】【Diff】Successful Local diff save.");
+            }
+
         }
 
         /// <summary>
@@ -165,6 +212,11 @@ namespace Ranking
             return getlist;
         }
 
+        /// <summary>
+        /// オンラインデータベースから全データ取得。
+        /// 時間がかかる場合があるので使用しないことを推奨。
+        /// </summary>
+        /// <returns>取得したランキングデータ型のリスト</returns>
         public List<Ranking.RankingData> GetAllData()
         {
             Log.Info("All record acquisition start.");
@@ -344,11 +396,11 @@ namespace Ranking
         /// <param name="newdata"></param>
         private void SaveLocal(RankingData newdata)
         {
-            Log.Info("【Online】Save local start.");
+            Log.Info("Local save start.");
             s.ConnectionOpen();
             s.InsertRecord(newdata);
             s.ConnectionClose();
-            Log.Info("【Success】Successful Local.");
+            Log.Info("【Success】Successful Local save.");
         }
 
         /// <summary>
