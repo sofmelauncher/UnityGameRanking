@@ -26,7 +26,7 @@ namespace Ranking
         private const string SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly string Version = "2.1.0.0";
+        public readonly string Version = "2.1.1.0";
 
         /// <summary>
         /// ログパス
