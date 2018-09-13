@@ -20,7 +20,7 @@ namespace Ranking
         private string BaseUrl { set; get; }
         private static UInt64 limit = 5;
 
-        private string ConfigFilePath = Path.LocalPath + "/config.txt";
+        private readonly string ConfigFilePath = Path.LocalPath + "/config.txt";
 
         private const string GET_DATA_URL = "/ranking/GetData.php";
         private const string SAVE_DATA_URL = "/ranking/SaveData.php";

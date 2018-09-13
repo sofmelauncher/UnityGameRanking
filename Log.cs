@@ -8,7 +8,7 @@ namespace Ranking
     class Log
     {
         private static UInt64 GameID { set; get; }
-        private static string FilePath = Path.LocalPath + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + "RankingLog.log";
+        private readonly static string FilePath = Path.LocalPath + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + "RankingLog.log";
 
         //private static readonly LogMode mode = LogMode.DEBUG;
         private static readonly LogMode mode = LogMode.RELEASE;
