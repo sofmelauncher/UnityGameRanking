@@ -14,25 +14,25 @@ namespace Ranking
     public class RankingManager
     {
         private static OrderType Oder { set; get; }
-        private static bool CanOnline { set; get; }
-        private static bool IsOnline { set; get; }
+        private static Boolean CanOnline { set; get; }
+        private static Boolean IsOnline { set; get; }
 
-        private string BaseUrl { set; get; }
+        private String BaseUrl { set; get; }
         private static UInt64 limit = 5;
 
-        private readonly string ConfigFilePath = Path.LocalPath + "/config.txt";
+        private readonly String ConfigFilePath = Path.LocalPath + "/config.txt";
 
-        private const string GET_DATA_URL = "/ranking/GetData.php";
-        private const string SAVE_DATA_URL = "/ranking/SaveData.php";
+        private const String GET_DATA_URL = "/ranking/GetData.php";
+        private const String SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly string Version = "2.1.1.0";
+        public readonly String Version = "2.1.1.0";
 
         /// <summary>
         /// ログパス
         /// </summary>
         /// <returns>ログのパス</returns>
-        public string GetLogPath
+        public String GetLogPath
         {
             get {
                 return Log.GetFilePath;
@@ -46,7 +46,7 @@ namespace Ranking
         /// <param name="gameid">ゲームのID</param>
         /// <param name="orderType">OrderType型, スコアデータのソート順</param>
         /// <param name="onlie">手動オンライン設定, デフォルト:true</param>
-        public RankingManager(string gamename, UInt64 gameid, OrderType orderType, bool onlie = true)
+        public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)
         {
             Log.Info("【Start】------------------------------------------------------------------------------------------" +
                 "------------------------------------------------------------------------------------------");
@@ -67,10 +67,9 @@ namespace Ranking
         /// <summary>
         /// 外部データベースに接続, 初期設定
         /// </summary>
-        /// <returns>true:接続成功, false:接続失敗</returns>
         public void Init()
         {
-            bool success = false;
+            Boolean success = false;
             s = new SQLite.SQLite();
             Log.Info("RankingManager initialization start.");
             s.ConnectionOpen();
@@ -121,7 +120,7 @@ namespace Ranking
         /// <param name="data">double型:スコアデータ</param>
         /// <param name="dataName">string型:データ名</param>
         /// <returns>取得したランキングデータ型のリスト</returns>
-        public List<Ranking.RankingData> DataSetAndLoad(double data, string dataName = "")
+        public List<RankingData> DataSetAndLoad(Double data, String dataName = "")
         {
             RankingData newdata = new RankingData(data, dataName);
             this.Save(newdata);
@@ -134,7 +133,7 @@ namespace Ranking
         /// </summary>
         /// <param name="data">RankingData型:セーブするランキングデータ</param>
         /// <returns>取得したランキングデータ型のリスト</returns>
-        public List<Ranking.RankingData> DataSetAndLoad(RankingData data)
+        public List<RankingData> DataSetAndLoad(RankingData data)
         {
             this.Save(data);
 
@@ -146,7 +145,7 @@ namespace Ranking
         /// </summary>
         /// <param name="data">double型:スコアデータ</param>
         /// <param name="dataName">string型:データ名</param>
-        public void SaveData(double data, string dataName = "")
+        public void SaveData(Double data, String dataName = "")
         {
             RankingData newdata = new RankingData(data, dataName);
             this.Save(newdata);
@@ -164,7 +163,7 @@ namespace Ranking
         private void Save(RankingData data)
         {
             SaveLocal(data);
-            bool success = false;
+            Boolean success = false;
             if (IsOnline && CanOnline)
             {
                 success =  SaveOnline(data);
@@ -256,7 +255,7 @@ namespace Ranking
         /// オンラインデータベースにデータ取得コマンド送信
         /// </summary>
         /// <returns>取得したランキングデータ型のリスト</returns>
-        private List<Ranking.RankingData> GetOnlineData(bool isAll = false)
+        private List<Ranking.RankingData> GetOnlineData(Boolean isAll = false)
         {
             var r = new List<Ranking.RankingData>();
             Log.Info("【Online】Get Online start.");
@@ -282,7 +281,7 @@ namespace Ranking
                     Exception exNestedInnerException = e;
                     do
                     {
-                        if (!string.IsNullOrEmpty(exNestedInnerException.Message))
+                        if (!String.IsNullOrEmpty(exNestedInnerException.Message))
                         {
                             Log.Fatal(exNestedInnerException.Message);
                         }
@@ -370,7 +369,7 @@ namespace Ranking
                     Exception exNestedInnerException = e;
                     do
                     {
-                        if (!string.IsNullOrEmpty(exNestedInnerException.Message))
+                        if (!String.IsNullOrEmpty(exNestedInnerException.Message))
                         {
                             Log.Fatal(exNestedInnerException.Message);
                         }
@@ -440,7 +439,7 @@ namespace Ranking
         private async Task<string> SendOnlieGetData(bool isAll = false)
         {
 
-            string lim;
+            String lim;
             if(isAll)
             {
                 lim = 0.ToString();
@@ -450,7 +449,7 @@ namespace Ranking
                 lim = RankingManager.limit.ToString();
             }
 
-            Dictionary<string, string> postid =  new Dictionary<string, string>
+            Dictionary<String, String> postid =  new Dictionary<String, String>
                     {
                         { "GameID", RankingData.GameID.ToString() },
                         { "OrderType", RankingManager.Oder.ToString() },
@@ -461,7 +460,7 @@ namespace Ranking
 
             Log.Info("【Online】Access to server.");
             Log.Info("【Online】Address is [" + BaseUrl + GET_DATA_URL + "].");
-            foreach (KeyValuePair<string, string> pair in postid)
+            foreach (KeyValuePair<String, String> pair in postid)
             {
                Log.Info("【Online】【Transmission】Contents key = [" + pair.Key + "], value = [" + pair.Value + "].");
             }
@@ -474,7 +473,7 @@ namespace Ranking
         /// ローカルにあるサーバーアドレス情報読み込み
         /// </summary>
         /// <returns>true:読み込み成功, false:読み込み失敗</returns>
-        private bool LoadServerAddress()
+        private Boolean LoadServerAddress()
         {
             System.IO.StreamReader sr = null;
             Log.Info("【File】Access to local server address start.");

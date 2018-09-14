@@ -6,16 +6,16 @@ namespace Ranking
 {
     class Path
     {
-        public static string LocalPath {
+        public static String LocalPath {
             get {
                 return GetFileSystemPath(Environment.SpecialFolder.LocalApplicationData);
             }
         }
 
-        private static string GetFileSystemPath(Environment.SpecialFolder folder)
+        private static String GetFileSystemPath(Environment.SpecialFolder folder)
         {
             // パスを取得
-            string path = String.Format(@"{0}\{1}\",
+            String path = String.Format(@"{0}\{1}\",
                 Environment.GetFolderPath(folder),
                 "Launcher2018");
 

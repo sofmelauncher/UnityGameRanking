@@ -8,12 +8,12 @@ namespace Ranking
     class Log
     {
         private static UInt64 GameID { set; get; }
-        private readonly static string FilePath = Path.LocalPath + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + "RankingLog.log";
+        private readonly static String FilePath = Path.LocalPath + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + "RankingLog.log";
 
         //private static readonly LogMode mode = LogMode.DEBUG;
         private static readonly LogMode mode = LogMode.RELEASE;
 
-        public static string GetFilePath {
+        public static String GetFilePath {
             get {
                 return Log.FilePath;
             }
@@ -41,14 +41,14 @@ namespace Ranking
         {
             //yyyy-MM-dd HH:mm:ss [xxxxx][yyy][xxxxx.xxxxx line: xxx] - xxx
 
-            string contents = "";
+            String contents = "";
             switch (mode)
             {
                 case LogMode.DEBUG:
                     StackTrace st = new StackTrace(1, true);
-                    string name = st.GetFrame(1).GetMethod().ReflectedType.FullName + "." + st.GetFrame(1).GetMethod().Name;
-                    string lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
-                    contents = string.Format("{0} [{1,-5}] [{2,2}] [{3,40}() line: {4,3}] - {5}",
+                    String name = st.GetFrame(1).GetMethod().ReflectedType.FullName + "." + st.GetFrame(1).GetMethod().Name;
+                    String lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
+                    contents = String.Format("{0} [{1,-5}] [{2,2}] [{3,40}() line: {4,3}] - {5}",
                         GetTime,
                         level.ToString(),
                         Log.GameID,
@@ -59,7 +59,7 @@ namespace Ranking
                     Console.WriteLine(contents);
                     break;
                 case LogMode.RELEASE:
-                    contents = string.Format("{0} [{1,-5}] [{2,2}] - {3}",
+                    contents = String.Format("{0} [{1,-5}] [{2,2}] - {3}",
                         GetTime,
                         level.ToString(),
                         Log.GameID,
@@ -81,7 +81,7 @@ namespace Ranking
             }
         }
 
-        private static string GetTime {
+        private static String GetTime {
             get {
                 return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 

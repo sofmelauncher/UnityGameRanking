@@ -12,37 +12,37 @@ namespace Ranking
             private static UInt64 GameID { set; get; }
             private static SQLiteConnection _conn = null;
             private static UInt64 limit = 5;
-            private string DbFilePath = Path.LocalPath;
-            private const string FileNmae = "ranking.db";
+            private readonly String DbFilePath = Path.LocalPath;
+            private const String FileNmae = "ranking.db";
 
-            private const string CreateTableCommand =
+            private const String CreateTableCommand =
                 "CREATE TABLE IF NOT EXISTS @GameName (DataID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + "SaveTime DATETIME NOT NULL,"
                 + "DataName VARCHAR(100) NULL,"
                 + "ScoreValue DOUBLE NOT NULL)";
 
-            private const string InsertCommand =
+            private const String InsertCommand =
                 "INSERT INTO @GameName (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3)";
 
-            private const string SelectCommand =
+            private const String SelectCommand =
                 "SELECT * FROM @GameName ORDER BY ScoreValue {0}, SaveTime DESC LIMIT {1};";
 
-            private const string AllSelectCommand =
+            private const String AllSelectCommand =
                 "SELECT * FROM @GameName;";
 
-            private const string DiffCreateTableCommand =
+            private const String DiffCreateTableCommand =
                 "CREATE TABLE IF NOT EXISTS @GameNamediff (DataID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + "SaveTime DATETIME NOT NULL,"
                 + "DataName VARCHAR(100) NULL,"
                 + "ScoreValue DOUBLE NOT NULL)";
 
-            private const string DiffInsertCommand =
+            private const String DiffInsertCommand =
                  "INSERT INTO @GameNamediff (SaveTime, DataName, ScoreValue) VALUES (@1, @2, @3);";
 
-            private const string DiffAllSelectCommand =
+            private const String DiffAllSelectCommand =
                 "SELECT * FROM @GameNamediff;";
 
-            private const string DiffAllDeleteCommand = "DELETE FROM @GameNamediff;";
+            private const String DiffAllDeleteCommand = "DELETE FROM @GameNamediff;";
 
             public static void SetLimit(UInt64 l)
             {
@@ -256,7 +256,7 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                     return;
                 }
-        Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
+                Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
                 Ranking.Log.Info("【SQL】【Diff】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
                 Ranking.Log.Info("【SQL】【Diff】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
                 Ranking.Log.Info("【SQL】【Diff】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
@@ -271,7 +271,7 @@ namespace Ranking
             public List<Ranking.RankingData> SelectRecord(Ranking.OrderType type)
             {
                 SQLiteCommand command = _conn.CreateCommand();
-                command.CommandText = string.Format(GameIDINCommand(SelectCommand), type.ToString(), SQLite.limit);
+                command.CommandText = String.Format(GameIDINCommand(SelectCommand), type.ToString(), SQLite.limit);
                 Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
                 SQLiteDataReader reader = null;
                 try
@@ -469,7 +469,7 @@ namespace Ranking
                 {
                     while (data.Read())
                     {
-                        Console.WriteLine(string.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
+                        Console.WriteLine(String.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
                             data.GetInt32(0),
                             data.GetString(1),
                             data.GetString(2),
@@ -488,9 +488,9 @@ namespace Ranking
             /// </summary>
             /// <param name="command"></param>
             /// <returns></returns>
-            private string GameIDINCommand(string command)
+            private String GameIDINCommand(String command)
             {
-                string result = Regex.Replace(command, "@GameName", TableName);
+                String result = Regex.Replace(command, "@GameName", TableName);
                 return result;
             }
 
@@ -499,13 +499,13 @@ namespace Ranking
             /// </summary>
             /// <param name="command"></param>
             /// <returns></returns>
-            private string DiffGameIDINCommand(string command)
+            private String DiffGameIDINCommand(String command)
             {
-                string result = Regex.Replace(command, "@GameName", TableName + "diff");
+                String result = Regex.Replace(command, "@GameName", TableName + "diff");
                 return result;
             }
 
-            private string TableName {
+            private String TableName {
                 get {
                     return "GameID" + SQLite.GameID.ToString();
                 }
