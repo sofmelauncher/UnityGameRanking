@@ -24,8 +24,9 @@
 ランキングデータのスコア値。64 ビット浮動小数点値。
 
 ## 関数一覧
-
-
+- [RankingData(Double, String)](#rankingdatadouble-string)
+- [RankingData(UInt64, DateTime, String, Double)](#rankingdatauint64-datetime-string-double)
+- [ToString()](#tostring)
 
 # RankingData(Double, String)
 `public RankingData(Double data, String name = "")`  
@@ -64,7 +65,6 @@ Double score = 3.1415;
 
 RankingData data = new RankingData(id, time, name, score);
 ```
-
 
 # ToString()
 `public override String ToString()`  
