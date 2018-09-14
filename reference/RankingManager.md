@@ -34,7 +34,15 @@
         - [DataSetAndLoad(RankingData)](#datasetandloadrankingdata)
             - [パラメーター](#パラメーター-2)
             - [戻り値](#戻り値-1)
-        - [](#)
+        - [SaveData(Doubl, String)](#savedatadoubl-string)
+            - [パラメーター](#パラメーター-3)
+        - [SaveData(RankingData)](#savedatarankingdata)
+            - [パラメーター](#パラメーター-4)
+        - [GetAllData()](#getalldata)
+            - [戻り値](#戻り値-2)
+        - [GetData()](#getdata)
+        - [SetLimit(UInt64)](#setlimituint64)
+            - [パラメーター](#パラメーター-5)
 
 <!-- /TOC -->
 
@@ -88,4 +96,38 @@
 `List<RankingData>`
 取得したランキングデータが入った`RankingData`型のリスト。データがなかった場合、空リスト。
 
-### 
+### SaveData(Doubl, String)
+`public void SaveData(Double data, String dataName = "")`
+
+#### パラメーター
+- `data`[Double型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/double)  
+データベースに保存するスコアデータ。
+- `dataName`[String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
+データベースに保存するスコアの名前。ユーザー名など。設定しなければ空文字。
+
+### SaveData(RankingData)
+`public void SaveData(RankingData data)`
+
+#### パラメーター
+- `data`[RankingData型]()  
+データベースに保存する`RankingData`型のデータ。
+
+### GetAllData()
+`public List<RankingData> GetAllData()`
+
+#### 戻り値
+`List<RankingData>`
+データベースに保存されている`RankingData`型の全データのリスト。データがなかった場合、空リスト。
+
+### GetData()
+`List<RankingData> GetData()`  
+
+
+
+
+### SetLimit(UInt64)
+`public void SetLimit(UInt64 lim)`
+
+#### パラメーター
+- `lim`[UInt64型](https://docs.microsoft.com/ja-jp/dotnet/api/system.uint64?redirectedfrom=MSDN&view=netframework-4.7.2)  
+`a``a`取得するランキングデータの個数を指定する。ディフォルトは`5`。
