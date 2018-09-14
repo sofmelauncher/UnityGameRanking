@@ -50,6 +50,10 @@ double型
 文字列型  
 最大100文字
 ---
+詳しくはリファレンスへ
+[reference](https://github.com/sofmelauncher/UnityGameRanking/tree/develop/reference)
+
+---
 <br><br><br><br>
 レポジトリ名にUnityって書いたけど、Untiyに依存しないようにした。  
 問題とかあればissue立ててくれたり連絡してくれるととてもありがたいです。  
