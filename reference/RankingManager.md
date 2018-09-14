@@ -91,7 +91,7 @@ var get = ranking.DataSetAndLoad(9.41, "Apple");
 データの保存を行い、続けてランキングデータを取得する。
 
 ### パラメーター
-- `data`[RankingData型]()  
+- `data`[RankingData型](https://github.com/sofmelauncher/UnityGameRanking/blob/develop/reference/RankingData.md)  
 データベースに保存する`RankingData`型のデータ。
 
 ### 戻り値
@@ -129,7 +129,7 @@ ranking.SaveData(9.41, "Apple");
 `public void SaveData(RankingData data)`
 データを指定して保存する。
 ### パラメーター
--   `data`[RankingData型]()  
+-   `data`[RankingData型](https://github.com/sofmelauncher/UnityGameRanking/blob/develop/reference/RankingData.md)  
 データベースに保存する`RankingData`型のデータ。
 
 ### 使用例

@@ -20,7 +20,7 @@
 `public String DataName { private set; get; }`  
 自身のランキングデータの名前。記録したプレイヤー名など。使用しなくても可。
 ### ScoreValue
-`public Double ScoreValue { private set; get; }`
+`public Double ScoreValue { private set; get; }`  
 ランキングデータのスコア値。64 ビット浮動小数点値。
 
 ## 関数一覧
@@ -28,7 +28,7 @@
 
 
 # RankingData(Double, String)
-`public RankingData(Double data, String name = "")`
+`public RankingData(Double data, String name = "")`  
 コンストラクタ。スコアデータを設定してインスタンスを生成する。
 
 ### パラメーター
@@ -43,7 +43,7 @@ RankingData data = new RankingData(5.2, "yahoo");
 ```
 
 # RankingData(UInt64, DateTime, String, Double)
-`public RankingData(UInt64 dataid, DateTime time, String name, Double data)`　
+`public RankingData(UInt64 dataid, DateTime time, String name, Double data)`  
 コンストラクタ。スコアデータを設定してインスタンスを生成する。主に内部処理で使用される。
 　
 - `dataid`[UInt64型](https://docs.microsoft.com/ja-jp/dotnet/api/system.uint64?redirectedfrom=MSDN&view=netframework-4.7.2)  
@@ -67,12 +67,12 @@ RankingData data = new RankingData(id, time, name, score);
 
 
 # ToString()
-`public override String ToString()`
+`public override String ToString()`  
 ランキングデータのデータをまとめて文字列で取得する。
 
 ### 戻り値
 `String`型
-内部データをまとめ、一定の書式に従った文字列。
+内部データをまとめ、一定の書式に従った文字列。  
 `$"GameID = {GameID,2}, Time = {Time,10}, DataID = {DataID,2}, Name = {Name}, Score = {ScoreValue,5:#.###}"`
 
 ### 使用例
