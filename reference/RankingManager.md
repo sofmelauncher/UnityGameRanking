@@ -49,8 +49,8 @@
 
 | 名称 | 概要 |
 | :- | :- |
-| DataSetAndLoad(double, string) | 指定した |
-| DataSetAndLoad(RankingData) |  |
+| DataSetAndLoad(double, string) | 指定した書式情報を使用してデータベースにデータを保存して、続けて、ランキングデータを取得する。 |
+| DataSetAndLoad(RankingData) | RankingData型を使用してデータベースにデータを保存して、続けて、ランキングデータを取得する。 |
 
 ### DataSetAndLoad(Double, String)
 `public List<RankingData> DataSetAndLoad(Double data, String dataName = "")`
