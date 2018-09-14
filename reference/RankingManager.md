@@ -29,15 +29,15 @@
         - [Versions](#versions)
         - [limit](#limit)
     - [関数一覧](#関数一覧)
-        - [RankingManager(String, UInt64, OrderType, Boolean)](#rankingmanagerstring-uint64-ordertype-boolean)
-            - [パラメーター](#パラメーター)
-        - [Init()](#init)
-        - [DataSetAndLoadオーバーロード](#datasetandloadオーバーロード)
-        - [DataSetAndLoad(Double, String)](#datasetandloaddouble-string)
+    - [RankingManager(String, UInt64, OrderType, Boolean)](#rankingmanagerstring-uint64-ordertype-boolean)
+        - [パラメーター](#パラメーター)
+- [Init()](#init)
+    - [DataSetAndLoadオーバーロード](#datasetandloadオーバーロード)
+    - [DataSetAndLoad(Double, String)](#datasetandloaddouble-string)
             - [パラメーター](#パラメーター-1)
             - [戻り値](#戻り値)
-        - [DataSetAndLoad(RankingData)](#datasetandloadrankingdata)
-            - [パラメーター](#パラメーター-2)
+    - [DataSetAndLoad(RankingData)](#datasetandloadrankingdata)
+        - [パラメーター](#パラメーター-2)
             - [戻り値](#戻り値-1)
         - [SaveData(Doubl, String)](#savedatadoubl-string)
             - [パラメーター](#パラメーター-3)
@@ -53,10 +53,9 @@
 <!-- /TOC -->
 
 
-### RankingManager(String, UInt64, OrderType, Boolean)
-  
+## RankingManager(String, UInt64, OrderType, Boolean)
 `public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)`
-#### パラメーター
+### パラメーター
 - `gamename` [String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
 設定するゲーム名。
 - `gameid`[UInt64型](https://docs.microsoft.com/ja-jp/dotnet/api/system.uint64?redirectedfrom=MSDN&view=netframework-4.7.2)  
@@ -66,18 +65,18 @@
 - `onlie = true`[Boolean型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/bool)  
 オンライン動作。ディフォルトは`true`。オフライン動作のみにしたい場合は`false`を指定。
 
-### Init()
+# Init()
 `public void Init()`  
 クラスの初期化、データベースへの接続などを行う。
 
-### DataSetAndLoadオーバーロード
+## DataSetAndLoadオーバーロード
 
 | 名称 | 概要 |
 | :- | :- |
 | DataSetAndLoad(double, string) | 指定した書式情報を使用してデータベースにデータを保存して、続けて、ランキングデータを取得する。 |
 | DataSetAndLoad(RankingData) | RankingData型を使用してデータベースにデータを保存して、続けて、ランキングデータを取得する。 |
 
-### DataSetAndLoad(Double, String)
+## DataSetAndLoad(Double, String)
 `public List<RankingData> DataSetAndLoad(Double data, String dataName = "")`
 
 #### パラメーター
@@ -91,10 +90,10 @@
 取得したランキングデータが入った`RankingData`型のリスト。データがなかった場合、空リスト。
 
 
-### DataSetAndLoad(RankingData)
+## DataSetAndLoad(RankingData)
 `public List<RankingData> DataSetAndLoad(RankingData data)`
 
-#### パラメーター
+### パラメーター
 - `data`[RankingData型]()  
 データベースに保存する`RankingData`型のデータ。
 
