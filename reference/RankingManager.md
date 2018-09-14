@@ -8,11 +8,15 @@
 
 ## プロパティ
 ### GetLogPath
-`public readonly String Version`
+`public readonly String Version`  
 ログファイルが出力されるディレクトリ。
 ### Versions
-`public String GetLogPath { get; }`
+`public String GetLogPath { get; }`  
 使用しているRankingManagerのバージョン情報。
+### limit
+`public static UInt64 limit { private set; get; }`  
+ランキングデータの取得数。
+
 ## 関数一覧
 
 <!-- TOC -->
@@ -23,6 +27,7 @@
     - [プロパティ](#プロパティ)
         - [GetLogPath](#getlogpath)
         - [Versions](#versions)
+        - [limit](#limit)
     - [関数一覧](#関数一覧)
         - [RankingManager(String, UInt64, OrderType, Boolean)](#rankingmanagerstring-uint64-ordertype-boolean)
             - [パラメーター](#パラメーター)
@@ -38,9 +43,10 @@
             - [パラメーター](#パラメーター-3)
         - [SaveData(RankingData)](#savedatarankingdata)
             - [パラメーター](#パラメーター-4)
-        - [GetAllData()](#getalldata)
-            - [戻り値](#戻り値-2)
         - [GetData()](#getdata)
+            - [戻り値](#戻り値-2)
+        - [GetAllData()](#getalldata)
+            - [戻り値](#戻り値-3)
         - [SetLimit(UInt64)](#setlimituint64)
             - [パラメーター](#パラメーター-5)
 
@@ -61,7 +67,7 @@
 オンライン動作。ディフォルトは`true`。オフライン動作のみにしたい場合は`false`を指定。
 
 ### Init()
-`public void Init()`
+`public void Init()`  
 クラスの初期化、データベースへの接続などを行う。
 
 ### DataSetAndLoadオーバーロード
@@ -81,7 +87,7 @@
 データベースに保存するスコアの名前。ユーザー名など。設定しなければ空文字。
 
 #### 戻り値
-`List<RankingData>`
+`List<RankingData>`  
 取得したランキングデータが入った`RankingData`型のリスト。データがなかった場合、空リスト。
 
 
@@ -112,22 +118,23 @@
 - `data`[RankingData型]()  
 データベースに保存する`RankingData`型のデータ。
 
+### GetData()
+`List<RankingData> GetData()`   
+
+#### 戻り値
+`List<RankingData>`
+データベースに保存されている`RankingData`型のデータのリスト。データがなかった場合、空リスト。
+
 ### GetAllData()
 `public List<RankingData> GetAllData()`
 
 #### 戻り値
 `List<RankingData>`
-データベースに保存されている`RankingData`型の全データのリスト。データがなかった場合、空リスト。
-
-### GetData()
-`List<RankingData> GetData()`  
-
-
-
+データベースに保存されている`RankingData`型の全データのリスト。データがなかった場合、空リスト。使用非推奨。
 
 ### SetLimit(UInt64)
 `public void SetLimit(UInt64 lim)`
 
 #### パラメーター
 - `lim`[UInt64型](https://docs.microsoft.com/ja-jp/dotnet/api/system.uint64?redirectedfrom=MSDN&view=netframework-4.7.2)  
-`a``a`取得するランキングデータの個数を指定する。ディフォルトは`5`。
+`GetData`で取得するランキングデータの個数を指定する。ディフォルトは`5`。大きくしすぎには注意。使用非推奨。
