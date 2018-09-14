@@ -5,6 +5,14 @@
 
 ## 名前空間
 `Rankig`
+
+## プロパティ
+### GetLogPath
+`public readonly String Version`
+ログファイルが出力されるディレクトリ。
+### Versions
+`public String GetLogPath { get; }`
+使用しているRankingManagerのバージョン情報。
 ## 関数一覧
 
 <!-- TOC -->
@@ -12,6 +20,9 @@
 - [RankingManager](#rankingmanager)
     - [概要](#概要)
     - [名前空間](#名前空間)
+    - [プロパティ](#プロパティ)
+        - [GetLogPath](#getlogpath)
+        - [Versions](#versions)
     - [関数一覧](#関数一覧)
         - [RankingManager(String, UInt64, OrderType, Boolean)](#rankingmanagerstring-uint64-ordertype-boolean)
             - [パラメーター](#パラメーター)
