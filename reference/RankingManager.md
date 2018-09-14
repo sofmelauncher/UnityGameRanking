@@ -32,7 +32,7 @@
 - [RankingManager(String, UInt64, OrderType, Boolean)](#rankingmanagerstring-uint64-ordertype-boolean)
         - [パラメーター](#パラメーター)
 - [Init()](#init)
-    - [DataSetAndLoadオーバーロード](#datasetandloadオーバーロード)
+- [DataSetAndLoadオーバーロード](#datasetandloadオーバーロード)
 - [DataSetAndLoad(Double, String)](#datasetandloaddouble-string)
         - [パラメーター](#パラメーター-1)
         - [戻り値](#戻り値)
@@ -69,7 +69,7 @@
 `public void Init()`  
 クラスの初期化、データベースへの接続などを行う。
 
-## DataSetAndLoadオーバーロード
+# DataSetAndLoadオーバーロード
 
 | 名称 | 概要 |
 | :- | :- |
