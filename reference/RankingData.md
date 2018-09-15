@@ -12,13 +12,13 @@
 設定したゲームID。
 ### DataID
 `public UInt64 DataID { private set; get; }`  
-自身のランキングデータのID。オンラインとオフラインのデータは同期していない。
+自身のランキングデータのID。オンラインとオフラインのデータは同期していない。データベース内で自動的に決まる。
 ### SaveTime
 `public DateTime SaveTime { private set; get; }`  
 データを保存した時間。`yyyy-MM-dd HH:mm:ss`形式。
 ### DataName
 `public String DataName { private set; get; }`  
-自身のランキングデータの名前。記録したプレイヤー名など。使用しなくても可。
+自身のランキングデータの名前。記録したプレイヤー名など。使用しなくても可。その場合空文字になる。
 ### ScoreValue
 `public Double ScoreValue { private set; get; }`  
 ランキングデータのスコア値。64 ビット浮動小数点値。
@@ -64,6 +64,7 @@ String name = "aaa";
 Double score = 3.1415;
 
 RankingData data = new RankingData(id, time, name, score);
+//保存処理時にこのデータIDは使用しないため無意味。
 ```
 
 # ToString()
@@ -71,7 +72,7 @@ RankingData data = new RankingData(id, time, name, score);
 ランキングデータのデータをまとめて文字列で取得する。
 
 ### 戻り値
-`String`型
+`String`型  
 内部データをまとめ、一定の書式に従った文字列。  
 `$"GameID = {GameID,2}, Time = {Time,10}, DataID = {DataID,2}, Name = {Name}, Score = {ScoreValue,5:#.###}"`
 
