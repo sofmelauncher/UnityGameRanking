@@ -2,6 +2,7 @@
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Ranking
 {
@@ -9,6 +10,13 @@ namespace Ranking
     {
         private static UInt64 GameID { set; get; }
         private readonly static String FilePath = ($"{Path.LocalPath}\\{DateTime.Now.ToString("yyyy-MM-dd")}RankingLog.log");
+        private readonly static String HtmlFilePath = ($"{Path.LocalPath}\\{DateTime.Now.ToString("yyyy-MM-dd")}RankingLog.html");
+
+        private const String defaultStyle = "white-space:nowrap;margin:0em 0em 0em 0;font-size:18px;font-family:'Tahoma';";
+        private const String msgStart = "<span style=\"color:#9c27b0;\">";
+        private const String msgEnd = "</span>";
+        private const String tagStart = "<span style=\"color:#225fd9;    font-weight: 600;\">";
+        private const String tagEnd = "</span>";
 
         //private static readonly LogMode mode = LogMode.DEBUG;
         private static readonly LogMode mode = LogMode.RELEASE;
@@ -18,6 +26,7 @@ namespace Ranking
                 return Log.FilePath;
             }
         }
+
         public static void Fatal(string message)
         { 
             Output(message, LogLevel.FATAL);
@@ -42,6 +51,8 @@ namespace Ranking
             //yyyy-MM-dd HH:mm:ss [xxxxx][yyy][xxxxx.xxxxx line: xxx] - xxx
 
             String contents = "";
+            String htmlcontents = "";
+            String style = ($"style = \"{defaultStyle}\"");
             switch (mode)
             {
                 case LogMode.DEBUG:
@@ -53,6 +64,11 @@ namespace Ranking
                     break;
                 case LogMode.RELEASE:
                     contents = ($"{GetTime} [{level.ToString(),-5}] [{Log.GameID,2}] - {msg}");
+                    msg = msg.Replace("[", $"[{msgStart}");
+                    msg = msg.Replace("]", $"{msgEnd}]");
+                    msg = msg.Replace("【", $"[{tagStart}");
+                    msg = msg.Replace("】", $"{tagEnd}]");
+                    htmlcontents = ($"<p class = \"{level.ToString()}\" {style} >{GetTime} [{LevelStyle(level),-5}] [{Log.GameID,2}] - {msg}</p>");
                     break;
             }
 
@@ -61,6 +77,18 @@ namespace Ranking
                 using (StreamWriter sw = new StreamWriter(FilePath, true, Encoding.UTF8))
                 {
                     sw.WriteLine(contents);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Log.Warn(ex.Message);
+            }
+
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(HtmlFilePath, true, Encoding.UTF8))
+                {
+                    sw.WriteLine(htmlcontents);
                 }
             }
             catch (ArgumentException ex)
@@ -78,6 +106,22 @@ namespace Ranking
         public static void SetGameID(UInt64 id)
         {
             Log.GameID = id;
+        }
+
+        private static String LevelStyle(LogLevel level)
+        {
+            switch (level)
+            {
+                case LogLevel.FATAL:
+                    return $"<span style=\"color:red\">{level.ToString()}</span>";
+                case LogLevel.WARN:
+                    return $"<span style=\"color:#ff9800;\">{ level.ToString()}</span > ";
+                case LogLevel.INFO:
+                    return $"<span style=\"color:black;\">{level.ToString()}</span>";
+                case LogLevel.DEBUG:
+                    return $"<span style=\"color:green;\">{level.ToString()}</span>";
+            }
+            return "";
         }
     }
 }

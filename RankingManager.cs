@@ -28,7 +28,7 @@ namespace Ranking
         private const String SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly String Version = "2.3.0.0";
+        public readonly String Version = "3.0.0.0";
 
         /// <summary>
         /// ログパス
@@ -112,6 +112,10 @@ namespace Ranking
             {
                 Log.Warn("【FAILED】【File】Failed to address read.");
                 RankingManager.CanOnline = false;
+            }
+            else if(!RankingManager.IsOnline)
+            {
+                Log.Info("RankingManager offline mode.");
             }
             Log.Info("【Success】RankingManager initialization finish.");
         }
