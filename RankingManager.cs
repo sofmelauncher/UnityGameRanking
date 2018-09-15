@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 
 namespace Ranking
 {
+
+
     /// <summary>
     /// ランキングデータを管理するクラス
     /// 外部サーバーへのランキング機能を提供
@@ -18,15 +20,15 @@ namespace Ranking
         private static Boolean IsOnline { set; get; }
 
         private String BaseUrl { set; get; }
-        private static UInt64 limit = 5;
+        public static UInt64 limit { private set; get; } = 5;
 
-        private readonly String ConfigFilePath = Path.LocalPath + "/config.txt";
+        private readonly String ConfigFilePath = ($"{Path.LocalPath}/config.txt");
 
         private const String GET_DATA_URL = "/ranking/GetData.php";
         private const String SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly String Version = "2.1.1.0";
+        public readonly String Version = "2.3.0.0";
 
         /// <summary>
         /// ログパス
@@ -50,7 +52,7 @@ namespace Ranking
         {
             Log.Info("【Start】------------------------------------------------------------------------------------------" +
                 "------------------------------------------------------------------------------------------");
-            Log.Info("Version = [" + this.Version + "].");
+            Log.Info($"Version = [{this.Version}].");
             if (!RankingData.SetGameID(gameid))
             {
                 Log.Fatal("Game ID is out of range.");
@@ -84,7 +86,7 @@ namespace Ranking
                 s.ConnectionOpen();
                 List<Ranking.RankingData> data = null;
                 data = s.DiffAllSelectRecord();
-                Log.Info("【Diff】diff database count = [" + data.Count.ToString() + "].");
+                Log.Info($"【Diff】diff database count = [{data.Count.ToString()}].");
                 if (data.Count != 0)
                 {
                     Log.Info("【Diff】diff database is exist.");
@@ -196,7 +198,7 @@ namespace Ranking
         /// ランキングデータ取得。オンラインに失敗した場合オフラインモードに移行。
         /// </summary>
         /// <returns>取得したランキングデータ型のリスト</returns>
-        public List<Ranking.RankingData> GetData()
+        public List<RankingData> GetData()
         {
             var getlist = new List<Ranking.RankingData>();
             if (IsOnline && CanOnline)
@@ -225,7 +227,7 @@ namespace Ranking
         /// 時間がかかる場合があるので使用しないことを推奨。
         /// </summary>
         /// <returns>取得したランキングデータ型のリスト</returns>
-        public List<Ranking.RankingData> GetAllData()
+        public List<RankingData> GetAllData()
         {
             Log.Info("All record acquisition start.");
             var getlist = new List<Ranking.RankingData>();
@@ -255,7 +257,7 @@ namespace Ranking
         /// オンラインデータベースにデータ取得コマンド送信
         /// </summary>
         /// <returns>取得したランキングデータ型のリスト</returns>
-        private List<Ranking.RankingData> GetOnlineData(Boolean isAll = false)
+        private List<RankingData> GetOnlineData(Boolean isAll = false)
         {
             var r = new List<Ranking.RankingData>();
             Log.Info("【Online】Get Online start.");
@@ -265,11 +267,11 @@ namespace Ranking
                 {
                     return this.SendOnlieGetData(isAll);
                 });
-                Log.Debug("【Server】" + task.Result);
+                Log.Debug($"【Server】{task.Result}");
                 r = JsonConvert.DeserializeObject<List<RankingData>>(task.Result);
                 foreach (var s in r)
                 {
-                    Log.Debug("【Online】" + s.ToString());
+                    Log.Debug($"【Online】{s.ToString()}");
                 }
                 Log.Info("【Success】【Online】Get Online Success.");
                 return r;
@@ -316,14 +318,14 @@ namespace Ranking
         /// <summary>
         /// ローカルデータベースからランキングデータ取得
         /// </summary>
-        private List<Ranking.RankingData> GetLocalData()
+        private List<RankingData> GetLocalData()
         {
             s.ConnectionOpen();
             var list = s.SelectRecord(RankingManager.Oder);
             s.ConnectionClose();
             foreach(var s in list)
             {
-                Log.Debug("【Local】" + s.ToString());
+                Log.Debug($"【Local】{s.ToString()}");
             }
             return list;
         }
@@ -338,7 +340,7 @@ namespace Ranking
             s.ConnectionClose();
             foreach (var s in list)
             {
-                Log.Debug("【Local】" + s.ToString());
+                Log.Debug($"【Local】{s.ToString()}");
             }
             return list;
         }
@@ -425,9 +427,9 @@ namespace Ranking
             var client = new System.Net.Http.HttpClient();
 
             Log.Info("【Online】Access to server.");
-            Log.Info("【Online】Address is [" + BaseUrl + SAVE_DATA_URL + "].");
-            Log.Info("【Online】【Transmission】Ranking Data [" + data.ToString() + "].");
-            Log.Info("【Online】【Transmission】Contents [" + content.ToString() + "].");
+            Log.Info($"【Online】Address is [{BaseUrl}{SAVE_DATA_URL}].");
+            Log.Info($"【Online】【Transmission】Ranking Data [{data.ToString()}].");
+            Log.Info($"【Online】【Transmission】Contents [{ content.ToString()}].");
             var response = await client.PostAsync(BaseUrl + SAVE_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -459,12 +461,12 @@ namespace Ranking
             var client = new System.Net.Http.HttpClient();
 
             Log.Info("【Online】Access to server.");
-            Log.Info("【Online】Address is [" + BaseUrl + GET_DATA_URL + "].");
+            Log.Info($"【Online】Address is [{BaseUrl}{GET_DATA_URL}].");
             foreach (KeyValuePair<String, String> pair in postid)
             {
-               Log.Info("【Online】【Transmission】Contents key = [" + pair.Key + "], value = [" + pair.Value + "].");
+               Log.Info($"【Online】【Transmission】Contents key = [{pair.Key}], value = [{pair.Value}].");
             }
-            Log.Info("【Online】【Transmission】Contents [" + content.Headers.ContentDisposition + "].");
+            Log.Info($"【Online】【Transmission】Contents [{content.Headers.ContentDisposition}].");
             var response = await client.PostAsync(BaseUrl + GET_DATA_URL, content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -523,11 +525,11 @@ namespace Ranking
         /// default = 5
         /// </summary>
         /// <param name="l">取得するデータ個数</param>
-        public void SetLimit(UInt64 l)
+        public void SetLimit(UInt64 lim)
         {
-            SQLite.SQLite.SetLimit(l);
-            RankingManager.limit = l;
-            Log.Info("【Success】Set limit is " + l.ToString());
+            SQLite.SQLite.SetLimit(lim);
+            RankingManager.limit = lim;
+            Log.Info($"【Success】Set limit is {lim.ToString()}");
             return;
         }
     }

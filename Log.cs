@@ -8,7 +8,7 @@ namespace Ranking
     class Log
     {
         private static UInt64 GameID { set; get; }
-        private readonly static String FilePath = Path.LocalPath + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + "RankingLog.log";
+        private readonly static String FilePath = ($"{Path.LocalPath}\\{DateTime.Now.ToString("yyyy-MM-dd")}RankingLog.log");
 
         //private static readonly LogMode mode = LogMode.DEBUG;
         private static readonly LogMode mode = LogMode.RELEASE;
@@ -48,23 +48,11 @@ namespace Ranking
                     StackTrace st = new StackTrace(1, true);
                     String name = st.GetFrame(1).GetMethod().ReflectedType.FullName + "." + st.GetFrame(1).GetMethod().Name;
                     String lineNumber = st.GetFrame(1).GetFileLineNumber().ToString();
-                    contents = String.Format("{0} [{1,-5}] [{2,2}] [{3,40}() line: {4,3}] - {5}",
-                        GetTime,
-                        level.ToString(),
-                        Log.GameID,
-                        name,
-                        lineNumber,
-                        msg
-                    );
+                    contents = ($"{GetTime} [{level.ToString(),-5}] [{Log.GameID,2}] [{name,40}() line: {lineNumber,3}] - {msg}");
                     Console.WriteLine(contents);
                     break;
                 case LogMode.RELEASE:
-                    contents = String.Format("{0} [{1,-5}] [{2,2}] - {3}",
-                        GetTime,
-                        level.ToString(),
-                        Log.GameID,
-                        msg
-                    );
+                    contents = ($"{GetTime} [{level.ToString(),-5}] [{Log.GameID,2}] - {msg}");
                     break;
             }
 

@@ -110,14 +110,14 @@ namespace Ranking
 
         public override String ToString()
         {
-            return String.Format("GameID = {0,2}, Time = {1,10}, DataID = {2,2}, Name = {3}, Score = {4,5:#.###}",
-                            RankingData.GameID.ToString(),
-                            this.SaveTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                            this.DataID.ToString(),
-                            this.DataName,
-                            this.ScoreValue
-                        );
+            return ($"" +
+                $"GameID = {RankingData.GameID.ToString(),2}," +
+                $" Time = {this.SaveTime.ToString("yyyy-MM-dd HH:mm:ss"),10}," +
+                $" DataID = {this.DataID.ToString(),2}," +
+                $" Name = {this.DataName}," +
+                $" Score = {this.ScoreValue,5:#.###}");
         }
+
 
     }
 }

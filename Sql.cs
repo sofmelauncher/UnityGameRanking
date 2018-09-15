@@ -56,8 +56,8 @@ namespace Ranking
             {
                 _conn = new SQLiteConnection();
                 _conn.ConnectionString =
-                    "Data Source=" + DbFilePath + "\\" + FileNmae + ";Version=3;";
-                Log.Info("【SQL】Execute [" + _conn.ConnectionString + "]");
+                    ($"Data Source={DbFilePath}\\{FileNmae};Version=3;");
+                Log.Info($"【SQL】Execute [{_conn.ConnectionString}]");
                 try
                 {
                     _conn.Open();
@@ -82,7 +82,7 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                     return;
                 }
-                Ranking.Log.Info("【Open】【SQL】Connect to [Data Source = " + DbFilePath + "\\" + FileNmae + "].");
+                Ranking.Log.Info($"【Open】【SQL】Connect to [Data Source = {DbFilePath}\\{FileNmae}].");
                 return;
             }
 
@@ -98,8 +98,8 @@ namespace Ranking
                 SQLiteCommand command_2 = _conn.CreateCommand();
                 command_2.CommandText = GameIDINCommand(DiffCreateTableCommand);
 
-                Log.Info("【SQL】Execute [" + command_1.CommandText + "]");
-                Log.Info("【SQL】Execute [" + command_2.CommandText + "]");
+                Log.Info($"【SQL】Execute [{command_1.CommandText}]");
+                Log.Info($"【SQL】Execute [{command_2.CommandText}]");
                 try
                 {
                     command_1.ExecuteNonQuery();
@@ -130,8 +130,8 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                     return;
                 }
-                Ranking.Log.Info("【Success】【SQL】Created of [" + TableName + "] table.");
-                Ranking.Log.Info("【Success】【SQL】Created of [" + TableName + "diff] table.");
+                Ranking.Log.Info($"【Success】【SQL】Created of [{TableName}] table.");
+                Ranking.Log.Info($"【Success】【SQL】Created of [{TableName}diff] table.");
 
                 return;
             }
@@ -141,7 +141,7 @@ namespace Ranking
             /// </summary>
             public void InsertRecord(Ranking.RankingData data)
             {
-                Ranking.Log.Info("【SQL】Ranking Data [" + data.ToString() + "].");
+                Ranking.Log.Info($"【SQL】Ranking Data [{data.ToString()}].");
                 SQLiteCommand command = _conn.CreateCommand();
                 command.CommandText = GameIDINCommand(InsertCommand);
 
@@ -161,7 +161,7 @@ namespace Ranking
                 command.Parameters.Add(DataName);
                 command.Parameters.Add(ScoreValue);
 
-                Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
+                Ranking.Log.Info($"【SQL】Execute [{command.CommandText}].");
                 try
                 {
                     command.ExecuteNonQuery();
@@ -193,10 +193,10 @@ namespace Ranking
                 }
 
 
-                Ranking.Log.Info("【Success】【SQL】Executed [" + command.CommandText + "].");
-                Ranking.Log.Info("【SQL】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
-                Ranking.Log.Info("【SQL】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
-                Ranking.Log.Info("【SQL】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
+                Ranking.Log.Info($"【Success】【SQL】Executed [{command.CommandText}].");
+                Ranking.Log.Info($"【SQL】@1 is [{command.Parameters["@1"].Value.ToString()}].");
+                Ranking.Log.Info($"【SQL】@2 is [{command.Parameters["@2"].Value.ToString()}].");
+                Ranking.Log.Info($"【SQL】@3 is [{command.Parameters["@3"].Value.ToString()}].");
                 return;
             }
 
@@ -206,7 +206,7 @@ namespace Ranking
             /// <param name="data"></param>
             public void DiffInsertRecord(Ranking.RankingData data)
             {
-                Ranking.Log.Info("【SQL】【Diff】Ranking Data [" + data.ToString() + "].");
+                Ranking.Log.Info($"【SQL】【Diff】Ranking Data [{data.ToString()}].");
                 SQLiteCommand command = _conn.CreateCommand();
                 command.CommandText = GameIDINCommand(DiffInsertCommand);
 
@@ -226,7 +226,7 @@ namespace Ranking
                 command.Parameters.Add(DataName);
                 command.Parameters.Add(ScoreValue);
 
-                Ranking.Log.Info("【SQL】【Diff】Execute [" + command.CommandText + "].");
+                Ranking.Log.Info($"【SQL】【Diff】Execute [{command.CommandText}].");
                 try
                 {
                     command.ExecuteNonQuery();
@@ -256,10 +256,10 @@ namespace Ranking
                     Ranking.Log.Fatal(ex.Message);
                     return;
                 }
-                Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
-                Ranking.Log.Info("【SQL】【Diff】@1 is [" + command.Parameters["@1"].Value.ToString() + "].");
-                Ranking.Log.Info("【SQL】【Diff】@2 is [" + command.Parameters["@2"].Value.ToString() + "].");
-                Ranking.Log.Info("【SQL】【Diff】@3 is [" + command.Parameters["@3"].Value.ToString() + "].");
+                Ranking.Log.Info($"【Success】【SQL】【Diff】Execute [{command.CommandText}].");
+                Ranking.Log.Info($"【SQL】【Diff】@1 is [{command.Parameters["@1"].Value.ToString()}].");
+                Ranking.Log.Info($"【SQL】【Diff】@2 is [{command.Parameters["@2"].Value.ToString()}].");
+                Ranking.Log.Info($"【SQL】【Diff】@3 is [{command.Parameters["@3"].Value.ToString()}].");
                 return;
             }
 
@@ -272,7 +272,7 @@ namespace Ranking
             {
                 SQLiteCommand command = _conn.CreateCommand();
                 command.CommandText = String.Format(GameIDINCommand(SelectCommand), type.ToString(), SQLite.limit);
-                Ranking.Log.Info("【SQL】Execute [" + command.CommandText + "].");
+                Ranking.Log.Info($"【SQL】Execute [{command.CommandText}].");
                 SQLiteDataReader reader = null;
                 try
                 {
@@ -298,7 +298,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【Success】【SQL】Executed [" + command.CommandText + "].");
+                Ranking.Log.Info($"【Success】【SQL】Executed [{command.CommandText}].");
 
 
                 var list = new List<Ranking.RankingData>();
@@ -320,7 +320,7 @@ namespace Ranking
             {
                 SQLiteCommand command = _conn.CreateCommand();
                 command.CommandText = GameIDINCommand(AllSelectCommand);
-                Ranking.Log.Info("【SQL】Exexuted [" + command.CommandText + "].");
+                Ranking.Log.Info($"【SQL】Exexuted [{command.CommandText}].");
                 SQLiteDataReader reader = null;
                 try
                 {
@@ -346,7 +346,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【Success】【SQL】Exexuted [" + command.CommandText + "].");
+                Ranking.Log.Info($"【Success】【SQL】Exexuted [{command.CommandText}].");
 
                 var list = new List<Ranking.RankingData>();
 
@@ -369,7 +369,7 @@ namespace Ranking
             {
                 SQLiteCommand command = _conn.CreateCommand();
                 command.CommandText = GameIDINCommand(DiffAllSelectCommand);
-                Ranking.Log.Info("【SQL】【Diff】Exexute [" + command.CommandText + "].");
+                Ranking.Log.Info($"【SQL】【Diff】Exexute [{command.CommandText}].");
                 SQLiteDataReader reader = null;
                 try
                 {
@@ -395,7 +395,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【Success】【SQL】【Diff】Exexuted [" + command.CommandText + "].");
+                Ranking.Log.Info($"【Success】【SQL】【Diff】Exexuted [{command.CommandText}].");
 
                 var list = new List<Ranking.RankingData>();
 
@@ -415,7 +415,7 @@ namespace Ranking
                 SQLiteCommand command = _conn.CreateCommand();
                 command.CommandText = GameIDINCommand(DiffAllDeleteCommand);
 
-                Ranking.Log.Info("【SQL】【Diff】Execute [" + command.CommandText + "].");
+                Ranking.Log.Info($"【SQL】【Diff】Execute [{command.CommandText}].");
                 try
                 {
                     command.ExecuteNonQuery();
@@ -440,7 +440,7 @@ namespace Ranking
                 {
                     Ranking.Log.Fatal(ex.Message);
                 }
-                Ranking.Log.Info("【Success】【SQL】【Diff】Execute [" + command.CommandText + "].");
+                Ranking.Log.Info($"【Success】【SQL】【Diff】Execute [{command.CommandText}].");
                 return;
             }
 
@@ -460,7 +460,7 @@ namespace Ranking
             public static void SetGameName(UInt64 id)
             {
                 SQLite.GameID = id;
-                Log.Info("【Success】【SQL】Set GameID is " + SQLite.GameID.ToString());
+                Log.Info($"【Success】【SQL】Set GameID is {SQLite.GameID.ToString()}");
             }
 
             private void ConsoleWriteData(SQLiteDataReader data)
@@ -469,12 +469,7 @@ namespace Ranking
                 {
                     while (data.Read())
                     {
-                        Console.WriteLine(String.Format("ID = {0,4}, TIME = {1,20}, Name = {2,10}, Score = {3,5:#.###}",
-                            data.GetInt32(0),
-                            data.GetString(1),
-                            data.GetString(2),
-                            data.GetDouble(3)
-                        ));
+                        Console.WriteLine($"ID = {data.GetInt32(0),4}, TIME = {data.GetString(1),20}, Name = {data.GetString(2),10}, Score = {data.GetDouble(3),5:#.###}");
                     }
                 }
                 catch (System.Data.SqlClient.SqlException ex)
@@ -507,7 +502,7 @@ namespace Ranking
 
             private String TableName {
                 get {
-                    return "GameID" + SQLite.GameID.ToString();
+                    return ($"GameID{SQLite.GameID.ToString()}");
                 }
             }
         }
