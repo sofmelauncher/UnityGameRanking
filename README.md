@@ -3,7 +3,7 @@ C#上でローカルサーバーまたはオンラインサーバーとランキ
 オンラインサーバーについては別レポジトリ参照。
 
 # 使用方法
-1. SofmeRanking.dllをダウンロードしてくる[(リンク)](https://github.com/sofmelauncher/UnityGameRanking/releases/tag/2.1.0.0)
+1. SofmeRanking.dllをダウンロードしてくる[(リンク)](https://github.com/sofmelauncher/UnityGameRanking/releases)
 1. SofmeRanking.dllを参照する。
 1. プログラム内から呼び出す
 
