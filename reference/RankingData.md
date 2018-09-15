@@ -41,6 +41,9 @@
 ### 使用例
 ```
 RankingData data = new RankingData(5.2, "yahoo");
+
+//名前を使用しない場合以下でも可
+RankingData data = new RankingData(5.2);
 ```
 
 # RankingData(UInt64, DateTime, String, Double)
