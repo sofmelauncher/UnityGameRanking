@@ -72,7 +72,7 @@ ranking.Init();
 - `data`[Double型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/double)  
 データベースに保存する64ビット倍精度浮動小数点型のスコアデータ。
 - `dataName`[String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
-データベースに保存するスコアの名前。ユーザー名など。設定しなければ空文字。
+データベースに保存するスコアの名前。ユーザー名など。設定しなければ空文字。最大100文字。
 
 ### 戻り値型
 `List<RankingData>`  
@@ -115,7 +115,7 @@ var get = ranking.DataSetAndLoad(data);
 - `data`[Double型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/double)  
 データベースに保存する64ビット倍精度浮動小数点型のスコアデータ。
 - `dataName`[String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
-データベースに保存するスコアの名前。ユーザー名など。設定しなければ空文字。
+データベースに保存するスコアの名前。ユーザー名など。設定しなければ空文字。最大100文字。
 
 ### 使用例
 ```

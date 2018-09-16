@@ -36,7 +36,7 @@
 - `data`[Double型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/double)  
 指定する64ビット倍精度浮動小数点型のスコアデータ。
 - `name`[String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
-データの名前として指定する文字列。
+データの名前として指定する文字列。最大100文字。
 
 ### 使用例
 ```
@@ -55,7 +55,7 @@ RankingData data = new RankingData(5.2);
 - `time`[DateTime型](https://docs.microsoft.com/ja-jp/dotnet/api/system.datetime?view=netframework-4.7.2)  
 ランキングデータの保存時間。
 - `name`[String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
-ランキングデータの名前。
+ランキングデータの名前。最大100文字。
 - `data`[Double型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/double)  
 ランキングデータのスコアデータ。
 
