@@ -26,7 +26,7 @@ namespace Ranking
         {
             this.ScoreValue = data;
             this.SaveTime = DateTime.Now;
-            this.DataName = name;
+            this.DataName = Substring(name);
         }
 
         public RankingData(UInt64 dataid, DateTime time, String name, Double data)
@@ -34,7 +34,7 @@ namespace Ranking
             this.DataID = dataid;
             this.ScoreValue = data;
             this.SaveTime = time;
-            this.DataName = name;
+            this.DataName = Substring(name);
         }
         [JsonConstructor]
         public RankingData(String dataid, String savetime, String dataname, String scorevalue)
@@ -42,7 +42,7 @@ namespace Ranking
             this.DataID = UInt64.Parse(dataid);
             this.SaveTime = DateTime.Parse(savetime);
             this.ScoreValue = Double.Parse(scorevalue);
-            this.DataName = dataname;
+            this.DataName = Substring(dataname);
         }
 
         /// <summary>
@@ -116,6 +116,18 @@ namespace Ranking
                 $" DataID = {this.DataID.ToString(),2}," +
                 $" Name = {this.DataName}," +
                 $" Score = {this.ScoreValue,5:#.###}");
+        }
+
+        private string Substring(String name)
+        {
+            if(name.Length > 100)
+            {
+                return name.Substring(0, 100);
+            }
+            else
+            {
+                return name;
+            }
         }
 
 
