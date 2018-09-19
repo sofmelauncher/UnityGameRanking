@@ -8,19 +8,19 @@
 
 ## プロパティ
 ### GameID
-`public static UInt64 GameID { private set; get; }`  
+`public static UInt64 GameID { get; }`  
 設定したゲームID。
 ### DataID
-`public UInt64 DataID { private set; get; }`  
+`public UInt64 DataID { get; }`  
 自身のランキングデータのID。オンラインとオフラインのデータは同期していない。データベース内で自動的に決まる。
 ### SaveTime
-`public DateTime SaveTime { private set; get; }`  
+`public DateTime SaveTime { get; }`  
 データを保存した時間。`yyyy-MM-dd HH:mm:ss`形式。
 ### DataName
-`public String DataName { private set; get; }`  
+`public String DataName { get; }`  
 自身のランキングデータの名前。記録したプレイヤー名など。使用しなくても可。その場合空文字になる。
 ### ScoreValue
-`public Double ScoreValue { private set; get; }`  
+`public Double ScoreValue { get; }`  
 ランキングデータのスコア値。64 ビット浮動小数点値。
 
 ## 関数一覧

@@ -14,7 +14,7 @@
 `public String GetLogPath { get; }`  
 使用しているRankingManagerのバージョン情報。
 ### limit
-`public static UInt64 limit { private set; get; }`  
+`public static UInt64 limit { get; }`  
 ランキングデータの取得数。
 
 ## 関数一覧
