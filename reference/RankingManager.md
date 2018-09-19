@@ -33,8 +33,9 @@
 
 
 # RankingManager(String, UInt64, OrderType, Boolean)
-`public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)`
+`public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)`  
 コンストラクタ。初期設定を指定する。
+
 ### パラメーター
 - `gamename` [String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
 設定するゲーム名。
@@ -65,7 +66,7 @@ ranking.Init();
 　　
 
 # DataSetAndLoad(Double, String)
-`public List<RankingData> DataSetAndLoad(Double data, String dataName = "")`
+`public List<RankingData> DataSetAndLoad(Double data, String dataName = "")`  
 データの保存を行い、続けてランキングデータを取得する。
 
 ### パラメーター
@@ -109,7 +110,7 @@ var get = ranking.DataSetAndLoad(data);
 
 
 # SaveData(Doubl, String)
-`public void SaveData(Double data, String dataName = "")`
+`public void SaveData(Double data, String dataName = "")`  
 データを指定して保存する。
 ### パラメーター
 - `data`[Double型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/double)  
@@ -126,7 +127,7 @@ ranking.SaveData(9.41, "Apple");
 ```
 
 # SaveData(RankingData)
-`public void SaveData(RankingData data)`
+`public void SaveData(RankingData data)`  
 データを指定して保存する。
 ### パラメーター
 -   `data`[RankingData型](https://github.com/sofmelauncher/UnityGameRanking/blob/develop/reference/RankingData.md)  
@@ -183,7 +184,7 @@ foreach(var e in data)
 ```
 
 # SetLimit(UInt64)
-`public void SetLimit(UInt64 lim)`
+`public void SetLimit(UInt64 lim)`  
 ランキングデータを取得する個数を変更する。
 
 ### パラメーター
