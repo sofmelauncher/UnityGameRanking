@@ -8,10 +8,10 @@
 
 ## プロパティ
 ### GetLogPath
-`public readonly String Version`  
+`public String GetLogPath { get; }`  
 ログファイルが出力されるディレクトリ。
 ### Versions
-`public String GetLogPath { get; }`  
+`public readonly String Version`  
 使用しているRankingManagerのバージョン情報。
 ### limit
 `public static UInt64 limit { get; }`  
