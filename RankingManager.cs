@@ -28,7 +28,7 @@ namespace Ranking
         private const String SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly String Version = "3.0.0.0";
+        public readonly String Version = "3.1.0.0";
 
         /// <summary>
         /// ログパス
@@ -50,7 +50,7 @@ namespace Ranking
         /// <param name="onlie">手動オンライン設定, デフォルト:true</param>
         public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)
         {
-            Log.Info("【Start】------------------------------------------------------------------------------------------" +
+            Log.Info($"【Start】[{gamename}]------------------------------------------------------------------------------------------" +
                 "------------------------------------------------------------------------------------------");
             Log.Info($"Version = [{this.Version}].");
             if (!RankingData.SetGameID(gameid))
