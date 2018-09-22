@@ -1,6 +1,6 @@
 # UnityGameRanking
 C#上でローカルサーバーまたはオンラインサーバーとランキングデータをやり取りするためのもの。
-オンラインサーバーについては別レポジトリ参照。
+オンラインサーバーについては別リポジトリ参照。
 
 # 使用方法
 1. SofmeRanking.zipをダウンロードして解凍する[(リンク)](https://github.com/sofmelauncher/UnityGameRanking/releases)
