@@ -23,6 +23,7 @@ namespace Ranking
         public static UInt64 limit { private set; get; } = 5;
 
         private readonly String ConfigFilePath = ($"{Path.LocalPath}/config.txt");
+        private const String ConfigDefaultSetting = "0";
 
         private const String GET_DATA_URL = "/ranking/GetData.php";
         private const String SAVE_DATA_URL = "/ranking/SaveData.php";
@@ -77,10 +78,11 @@ namespace Ranking
             s.ConnectionOpen();
             s.CreateTable();
             s.ConnectionClose();
-            if (this.LoadServerAddress() && RankingManager.IsOnline)
+            RankingManager.CanOnline = this.LoadServerAddress();
+
+            if (RankingManager.CanOnline && RankingManager.IsOnline)
             {
                 Log.Info("【Success】【File】Success for address read.");
-                RankingManager.CanOnline = true;
 
                 Log.Info("【Diff】Check Diff DataBase.");
                 s.ConnectionOpen();
@@ -112,9 +114,6 @@ namespace Ranking
             {
                 Log.Warn("【FAILED】【File】Failed to address read.");
                 RankingManager.CanOnline = false;
-            }
-            else if(!RankingManager.IsOnline)
-            {
                 Log.Info("RankingManager offline mode.");
             }
             Log.Info("【Success】RankingManager initialization finish.");
@@ -166,8 +165,10 @@ namespace Ranking
         {
             this.Save(data);
         }
+
         private void Save(RankingData data)
         {
+            Log.Info("Record Write start.");
             SaveLocal(data);
             Boolean success = false;
             if (IsOnline && CanOnline)
@@ -204,6 +205,7 @@ namespace Ranking
         /// <returns>取得したランキングデータ型のリスト</returns>
         public List<RankingData> GetData()
         {
+            Log.Info("Record acquisition start.");
             var getlist = new List<Ranking.RankingData>();
             if (IsOnline && CanOnline)
             {
@@ -478,10 +480,11 @@ namespace Ranking
         /// <summary>
         /// ローカルにあるサーバーアドレス情報読み込み
         /// </summary>
-        /// <returns>true:読み込み成功, false:読み込み失敗</returns>
+        /// <returns>true:読み込み成功, false:読み込み失敗,　オフラインモード</returns>
         private Boolean LoadServerAddress()
         {
             System.IO.StreamReader sr = null;
+            System.IO.StreamWriter sw = null;
             Log.Info("【File】Access to local server address start.");
             try
             {
@@ -490,8 +493,21 @@ namespace Ranking
             catch (System.IO.FileNotFoundException ex)
             {
                 Log.Fatal(ex.Message);
+                try
+                {
+                    Log.Info("【File】Create Setting File.");
+                    using (sw = new System.IO.StreamWriter(ConfigFilePath, true, System.Text.Encoding.UTF8))
+                    {
+                        sw.Write(ConfigDefaultSetting);
+                        Log.Info($"【File】Write[{ConfigDefaultSetting}]");
+                    }
+                }
+                catch (ArgumentException exx)
+                {
+                    Log.Warn(exx.Message);
+                }
                 return false;
-            }
+              }
             catch (System.UnauthorizedAccessException ex)
             {
                 Log.Fatal(ex.Message);
@@ -520,7 +536,13 @@ namespace Ranking
             Log.Info("【Success】【File】Access to local server address finish.");
 
             this.BaseUrl = sr.ReadToEnd();
+            Log.Info($"【File】BaseUrl[{this.BaseUrl}].");
             sr.Close();
+
+            if(this.BaseUrl == "0")
+            {
+                return false;
+            }
             return true;
         }
 
