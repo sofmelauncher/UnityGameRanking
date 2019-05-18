@@ -5,8 +5,8 @@ C#上でローカルサーバーまたはオンラインサーバーとランキ
 
 # 使用方法
 
-1. SofmeRanking.zip をダウンロードして解凍する[(リンク)](https://github.com/sofmelauncher/UnityGameRanking/releases)
-1. SofmeRanking.dll を参照する。
+1. SofmeRanking.zip　をダウンロードして解凍する[(リンク)](https://github.com/sofmelauncher/UnityGameRanking/releases)
+1. SofmeRanking.dll　を参照する。
 1. プログラム内から呼び出す
 
 ```
@@ -36,22 +36,22 @@ foreach(var e in data)
 
 -   ゲーム名  
     文字列
--   ゲーム ID  
-    符号なし整数型, 0 は指定不可
+-   ゲーム　ID  
+    符号なし整数型、 0　は指定不可
 -   オーダータイプ
     -   ASC  
         昇順
     -   DESC  
         降順
 -   オンライン動作  
-    デフォルトは true  
-    オフライン動作のみにしたい場合は false 指定
+    デフォルトは　true  
+    オフライン動作のみにしたい場合は　false　指定
 
 -   スコアデータ  
-    double 型
+    double　型
 -   データ名  
     文字列型  
-    最大 100 文字
+    最大　100　文字
 
 ---
 
@@ -61,6 +61,6 @@ foreach(var e in data)
 ---
 
 <br><br><br><br>
-リポジトリ名に Unity って書いたけど、Untiy に依存しないようにした。  
-問題とかあれば issue 立ててくれたり連絡してくれるととてもありがたいです。  
-あと、正式な名前がきまってない...
+リポジトリ名に　Unity　って書いたけど、Untiy　に依存しないように変更。  
+問題とかあれば　issue　立ててくれたり連絡してくれるととてもありがたいです。  
+あと、正式な名前がきまってない…
