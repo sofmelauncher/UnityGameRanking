@@ -29,7 +29,20 @@ namespace Ranking
         private const String SAVE_DATA_URL = "/ranking/SaveData.php";
 
         SQLite.SQLite s = null;
-        public readonly String Version = "3.2.0.0";
+        public readonly String Version = "3.2.1.0";
+
+        private static RankingManager instance = new RankingManager();
+
+        public static RankingManager Inst {
+            get {
+                return instance;
+            }
+        }
+
+        private RankingManager()
+        {
+
+        }
 
         /// <summary>
         /// ログパス
@@ -49,7 +62,7 @@ namespace Ranking
         /// <param name="gameid">ゲームのID</param>
         /// <param name="orderType">OrderType型, スコアデータのソート順</param>
         /// <param name="onlie">手動オンライン設定, デフォルト:true</param>
-        public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)
+        public void Setting(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)
         {
             Log.Info($"【Start】[{gamename}]------------------------------------------------------------------------------------------" +
                 "------------------------------------------------------------------------------------------");
@@ -65,12 +78,13 @@ namespace Ranking
             SQLite.SQLite.SetGameName(gameid);
             Log.Info("Instance was created.");
 
+            this.Init();
         }
 
         /// <summary>
         /// 外部データベースに接続, 初期設定
         /// </summary>
-        public void Init()
+        private void Init()
         {
             Boolean success = false;
             s = new SQLite.SQLite();
