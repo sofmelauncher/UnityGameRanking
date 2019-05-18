@@ -2,11 +2,15 @@
 
 ## 概要
 ネットワーク上に置いたサーバと通信してデータベースを一元化し、統一されたランキングデータを提供する。ネットワークに接続できない場合はローカルにデータベースを作成し動作する。
+シングルトンクラス。
 
 ## 名前空間
 `Rankig`
 
 ## プロパティ
+### Inst
+``public static RankingManager Inst { get;}`
+自身のインスタンス。
 ### GetLogPath
 `public String GetLogPath { get; }`  
 ログファイルが出力されるディレクトリ。
@@ -19,8 +23,7 @@
 
 ## 関数一覧
 
-- [RankingManager(String, UInt64, OrderType, Boolean)](#rankingmanagerstring-uint64-ordertype-boolean)
-- [Init()](#init)
+- [Setting(String, UInt64, OrderType, Boolean)](#rankingmanagerstring-uint64-ordertype-boolean)
 - [DataSetAndLoadオーバーロード](#datasetandloadオーバーロード)
 - [DataSetAndLoad(Double, String)](#datasetandloaddouble-string)
 - [DataSetAndLoad(RankingData)](#datasetandloadrankingdata)
@@ -32,9 +35,9 @@
 
 
 
-# RankingManager(String, UInt64, OrderType, Boolean)
-`public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)`  
-コンストラクター。初期設定を指定する。
+# Setting(String, UInt64, OrderType, Boolean)
+`public Setting(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)`  
+初期設定を指定する。
 
 ### パラメーター
 - `gamename` [String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
@@ -46,16 +49,6 @@
 - `onlie = true`[Boolean型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/bool)  
 オンライン動作。デフォルトは`true`。オフライン動作のみにしたい場合は`false`を指定。
 
-# Init()
-`public void Init()`  
-クラスの初期化、データベースへの接続などを行う。**使用前に必ず一度行う**。
-
-### 使用例
-```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
-```
-
 # DataSetAndLoadオーバーロード
 
 | 名称 | 概要 |
@@ -64,7 +57,6 @@ ranking.Init();
 | DataSetAndLoad(RankingData) | RankingData型を使用してデータベースにデータを保存して、続けて、ランキングデータを取得する。 |
 　　
 　　
-
 # DataSetAndLoad(Double, String)
 `public List<RankingData> DataSetAndLoad(Double data, String dataName = "")`  
 データの保存を行い、続けてランキングデータを取得する。
