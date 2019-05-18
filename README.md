@@ -10,21 +10,18 @@ C#上でローカルサーバーまたはオンラインサーバーとランキ
 1. プログラム内から呼び出す
 
 ```
-Ranking.RankingManager m = new Ranking.RankingManager(ゲーム名, ゲームID, オーダータイプ, オンライン動作);
+RankingManager.Inst.Setting(ゲーム名, ゲームID, オーダータイプ, オンライン動作);
 //例
-//Ranking.RankingManager m = new Ranking.RankingManager("神のゲーム", 1, Ranking.OrderType.DESC);
-
-//一度実行
-m.init();
+//RankingManager.Inst.Setting("神のゲーム", 1, Ranking.OrderType.DESC);
 
 //データ挿入
-m.SaveData(スコアデータ, データ名);
+RankingManager.Inst.SaveData(スコアデータ, データ名);
 //例
-//m.SaveData(10.5, "ジェイソン");
+//RankingManager.Inst.SaveData(10.5, "ジェイソン");
 
 //データ取得
 //例
-var data = m.GetData();
+var data = RankingManager.Inst.GetData();
 foreach(var e in data)
 {
   Console.WriteLine(e.ScoreValue);
