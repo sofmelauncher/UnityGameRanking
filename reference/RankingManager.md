@@ -9,7 +9,7 @@
 
 ## プロパティ
 ### Inst
-`public static RankingManager Inst { get;}`
+`public static RankingManager Inst { get;}`  
 自身のインスタンス。
 ### GetLogPath
 `public String GetLogPath { get; }`  
