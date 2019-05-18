@@ -15,5 +15,5 @@
 ### 使用例
 ```
 OrderType type = OrderType.ASC;
-RankingManager u = new RankingManager("ああああああ", 1, type, false);
+RankingManager.Inst.Setting("ああああああ", 1, type, false);
 ```
