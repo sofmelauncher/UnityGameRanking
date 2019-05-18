@@ -10,7 +10,7 @@ C#上でローカルサーバーまたはオンラインサーバーとランキ
 1. プログラム内から呼び出す
 
 ```
-RankingManager.Inst.Setting(ゲーム名, ゲームID, オーダータイプ, オンライン動作);
+RankingManager.Inst.Setting(ゲーム名, ゲームID, オーダータイプ, オンライン動作); //必須
 //例
 //RankingManager.Inst.Setting("神のゲーム", 1, Ranking.OrderType.DESC);
 
