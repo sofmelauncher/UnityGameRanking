@@ -34,7 +34,7 @@
 
 # RankingManager(String, UInt64, OrderType, Boolean)
 `public RankingManager(String gamename, UInt64 gameid, OrderType orderType, Boolean onlie = true)`  
-コンストラクタ。初期設定を指定する。
+コンストラクター。初期設定を指定する。
 
 ### パラメーター
 - `gamename` [String型](https://docs.microsoft.com/ja-jp/dotnet/api/system.string?redirectedfrom=MSDN&view=netframework-4.7.2)  
@@ -44,7 +44,7 @@
 - `orderType` [OrderTyple型]()  
 データの並び順。
 - `onlie = true`[Boolean型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/bool)  
-オンライン動作。ディフォルトは`true`。オフライン動作のみにしたい場合は`false`を指定。
+オンライン動作。デフォルトは`true`。オフライン動作のみにしたい場合は`false`を指定。
 
 # Init()
 `public void Init()`  
@@ -189,7 +189,7 @@ foreach(var e in data)
 
 ### パラメーター
 - `lim`[UInt64型](https://docs.microsoft.com/ja-jp/dotnet/api/system.uint64?redirectedfrom=MSDN&view=netframework-4.7.2)  
-`GetData`で取得するランキングデータの個数を指定する。ディフォルトは`5`。大きくしすぎには注意。**使用非推奨**。
+`GetData`で取得するランキングデータの個数を指定する。デフォルトは`5`。大きくしすぎには注意。**使用非推奨**。
 
 ### 使用例
 ```
