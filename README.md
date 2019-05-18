@@ -29,6 +29,16 @@ foreach(var e in data)
 }
 ```
 
+# 注意点
+```
+RankingManager.Inst.Setting(ゲーム名, ゲームID, オーダータイプ, オンライン動作);
+```
+を実行せずに、
+```
+RankingManager.Inst.SaveData(10.5, "ジェイソン");
+```
+などを実行すると、エラーが発生する。
+
 ## 引数の説明
 
 -   ゲーム名  
