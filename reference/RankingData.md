@@ -21,7 +21,7 @@
 自身のランキングデータの名前。記録したプレイヤー名など。使用しなくても可。その場合空文字になる。
 ### ScoreValue
 `public Double ScoreValue { get; }`  
-ランキングデータのスコア値。64 ビット浮動小数点値。
+ランキングデータのスコア値。64ビット浮動小数点値。
 
 ## 関数一覧
 - [RankingData(Double, String)](#rankingdatadouble-string)
@@ -30,7 +30,7 @@
 
 # RankingData(Double, String)
 `public RankingData(Double data, String name = "")`  
-コンストラクタ。スコアデータを設定してインスタンスを生成する。
+コンストラクター。スコアデータを設定してインスタンスを生成する。
 
 ### パラメーター
 - `data`[Double型](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/double)  
@@ -48,7 +48,7 @@ RankingData data = new RankingData(5.2);
 
 # RankingData(UInt64, DateTime, String, Double)
 `public RankingData(UInt64 dataid, DateTime time, String name, Double data)`  
-コンストラクタ。スコアデータを設定してインスタンスを生成する。主に内部処理で使用される。
+コンストラクター。スコアデータを設定してインスタンスを生成する。主に内部処理で使用される。
 　
 - `dataid`[UInt64型](https://docs.microsoft.com/ja-jp/dotnet/api/system.uint64?redirectedfrom=MSDN&view=netframework-4.7.2)  
 ランキングデータのデータID。
