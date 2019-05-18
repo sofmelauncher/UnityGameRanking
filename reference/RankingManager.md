@@ -73,10 +73,9 @@
 
 ### 使用例
 ```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
+RankingManager.Inst.Setting("めじぇど", 1, OrderType.DESC);
 
-var get = ranking.DataSetAndLoad(9.41, "Apple");
+var get = RankingManager.Inst.DataSetAndLoad(9.41, "Apple");
 ```
 
 # DataSetAndLoad(RankingData)
@@ -93,11 +92,10 @@ var get = ranking.DataSetAndLoad(9.41, "Apple");
 
 ### 使用例
 ```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
+RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
 
 RankingData data = new RankingData(5.2, "yahoo");
-var get = ranking.DataSetAndLoad(data);
+var get = RankingManager.Inst.DataSetAndLoad(data);
 ```
 
 
@@ -112,10 +110,9 @@ var get = ranking.DataSetAndLoad(data);
 
 ### 使用例
 ```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
+RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
 
-ranking.SaveData(9.41, "Apple");
+RankingManager.Inst.SaveData(9.41, "Apple");
 ```
 
 # SaveData(RankingData)
@@ -127,11 +124,10 @@ ranking.SaveData(9.41, "Apple");
 
 ### 使用例
 ```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
+RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
 
 RankingData data = new RankingData(5.2, "yahoo");
-ranking.SaveData(data);
+RankingManager.Inst.SaveData(data);
 ```
 
 # GetData()
@@ -143,10 +139,9 @@ ranking.SaveData(data);
 
 ### 使用例
 ```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
+RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
 
-var data = ranking.GetData();
+var data = RankingManager.Inst.GetData();
 foreach(var e in data)
 {
     Console.WriteLine(e.ScoreValue);
@@ -164,10 +159,9 @@ foreach(var e in data)
 
 ### 使用例
 ```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
+RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
 
-var data = ranking.GetAllData()
+var data = RankingManager.Inst.GetAllData()
 foreach(var e in data)
 {
     Console.WriteLine(e.ScoreValue);
@@ -185,9 +179,8 @@ foreach(var e in data)
 
 ### 使用例
 ```
-RankingManager ranking = new RankingManager("めじぇど", 1, OrderType.DESC);
-ranking.Init();
+RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
 
-ranking.SetLimit(20);
+RankingManager.Inst.SetLimit(20);
 //GetData()で20個のデータを取得する。
 ```
