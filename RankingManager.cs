@@ -550,7 +550,7 @@ namespace Ranking
         /// 取得するデータの個数
         /// default = 5
         /// </summary>
-        /// <param name="l">取得するデータ個数</param>
+        /// <param name="lim">取得するデータ個数</param>
         public void SetLimit(UInt64 lim)
         {
             SQLite.SQLite.SetLimit(lim);
