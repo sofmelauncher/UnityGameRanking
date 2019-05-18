@@ -31,10 +31,14 @@ namespace Ranking
         SQLite.SQLite s = null;
         public readonly String Version = "3.2.1.0";
 
-        private static RankingManager instance = new RankingManager();
+        private static RankingManager instance = null;
 
         public static RankingManager Inst {
             get {
+                if (instance == null)
+                {
+                    instance = new RankingManager();
+                }
                 return instance;
             }
         }
