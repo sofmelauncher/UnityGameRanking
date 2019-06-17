@@ -92,7 +92,7 @@ var get = RankingManager.Inst.DataSetAndLoad(9.41, "Apple");
 
 ### 使用例
 ```
-RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
+RankingManager.Inst.Setting("めじぇど", 1, OrderType.DESC);
 
 RankingData data = new RankingData(5.2, "yahoo");
 var get = RankingManager.Inst.DataSetAndLoad(data);
@@ -110,7 +110,7 @@ var get = RankingManager.Inst.DataSetAndLoad(data);
 
 ### 使用例
 ```
-RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
+RankingManager.Inst.Setting("めじぇど", 1, OrderType.DESC);
 
 RankingManager.Inst.SaveData(9.41, "Apple");
 ```
@@ -124,7 +124,7 @@ RankingManager.Inst.SaveData(9.41, "Apple");
 
 ### 使用例
 ```
-RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
+RankingManager.Inst.Setting("めじぇど", 1, OrderType.DESC);
 
 RankingData data = new RankingData(5.2, "yahoo");
 RankingManager.Inst.SaveData(data);
@@ -139,7 +139,7 @@ RankingManager.Inst.SaveData(data);
 
 ### 使用例
 ```
-RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
+RankingManager.Inst.Setting("めじぇど", 1, OrderType.DESC);
 
 var data = RankingManager.Inst.GetData();
 foreach(var e in data)
@@ -159,7 +159,7 @@ foreach(var e in data)
 
 ### 使用例
 ```
-RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
+RankingManager.Inst.Setting("めじぇど", 1, OrderType.DESC);
 
 var data = RankingManager.Inst.GetAllData()
 foreach(var e in data)
@@ -179,7 +179,7 @@ foreach(var e in data)
 
 ### 使用例
 ```
-RankingManager.Inst.("めじぇど", 1, OrderType.DESC);
+RankingManager.Inst.Setting("めじぇど", 1, OrderType.DESC);
 
 RankingManager.Inst.SetLimit(20);
 //GetData()で20個のデータを取得する。
